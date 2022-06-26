@@ -88,3 +88,14 @@ Suppress renders (performance) with
 -  Context -> none
 
 **COMMIT: 2.0.2 - FEAT: show shoes available and allow customer to filter list by size**
+
+## Display count of items found (based on filter)
+
+Add text below the `<select>` "x items found". My simple solution: `<p>{filteredProducts.length} items found</p>`.
+
+Instructor uses an `<h2>`. He also only shows the count if a size is selected.
+
+-  I don't like the way that jumps the display around when no specfic size is selected. Many sites I see always display a product count or similar.
+-  Key thing to note here is he uses `{ selectedSize === '' && <h2>...</h2> }` where the first term must be true for the second term to evaluate and generate HTML.
+
+**COMMIT: 2.0.3 - FEAT: show count of filtered products under filter**
