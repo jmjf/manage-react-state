@@ -1,3 +1,7 @@
+# my exclusions
+build/
+.husky
+
 # Logs
 logs
 *.log
