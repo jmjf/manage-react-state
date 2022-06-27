@@ -99,3 +99,83 @@ Instructor uses an `<h2>`. He also only shows the count if a size is selected.
 -  Key thing to note here is he uses `{ selectedSize === '' && <h2>...</h2> }` where the first term must be true for the second term to evaluate and generate HTML.
 
 **COMMIT: 2.0.3 - FEAT: show count of filtered products under filter**
+
+## Environment setup to make me happier
+
+-  I fixed the setup for Prettier and told VSCode (Ctrl + Shift + P, Preference: Open Settings (JSON)) to use it for everything
+   -  Removed VSCode Prettier config in favor of `.prettierrc.json`
+   -  [Reference](https://blog.avenuecode.com/how-to-integrate-prettier-and-eslint-in-vscode-and-react); with some custom settings for Prettier based on my preferences
+   -  Moved eslint and Prettier configs to project root
+   -  Adjusted eslint config
+      -  Make tab issues a warning (because it's fighting Prettier)
+      -  Add `"plugin:react/jsx-runtime"` so it won't complain about no `React` import for JSX (not required for React 17+)
+
+**COMMIT: 2.0.4 - CHORE: set up eslint and Prettier correctly; add precommit hook to run Prettier**
+
+## useEffect to fetch/store data
+
+`useEffect()` runs after each render by default, but can be configured to run only on the first render.
+
+Changes
+
+-  Remove `products` array
+-  Add `useEffect()` to `App` after state setup
+   -  Takes a function to execute and a dependency array
+-  Write function to get products from API
+   -  I suspect we'll need products either as state or a `let` variable
+      -  After some pre-work, he uses state
+   -  Products data is at `localhost:3001/products`
+   -  He has a `getProducts()` function in `services/productService`
+      -  Expects `REACT_APP_API_BASE_URL` environment variable
+      -  Converted to TS by typing the parameters and return values
+      -  Moved `IProducts` (exported) and `ISku` to `productService` and imported in `App`
+   -  He uses `.then()` on the Promise, so I'll go along with that for now
+      -  `getProducts()` throws its response and he doesn't seem to handle an error isn't handling a failure response
+      -  I added a `.catch()` to the Promise chain
+-  And now the `useEffect()` is running, spamming the API because it's running on every render, which seems to be constant
+   -  So, pass the dependency array (empty) so it only runs on first render
+
+### How to call APIs
+
+Inline inside the component
+
+-  Uses axios, fetch, etc., in the `useEffect()` directly
+-  Harder to reason about
+-  Not reusable
+
+Separate function
+
+-  Function makes the call
+-  `useEffect()` calls the function
+
+Custom hook
+
+-  Will cover later in course
+
+Third party library
+
+-  Will cover later in course
+
+### Error handling with ErrorBoundary
+
+-  I expect this will undo my `.catch()`, which is fine
+-  He uses `ErrorBoundary` from the React docs; I'll use the TS version from `r17-components`
+-  He also throws it in `src`, which I don't like, but I'm hoping he'll organize things better later
+
+-  I'm adjusting index.js to use React 18 `createRoot()`
+   -  Get document root in `container` const
+   -  Replace `ReactDOM.render` with `ReactDOM.createRoot(container).render()`
+   -  Remove `getElementByid()` from `render()` args
+-  And wrap it in `<ErrorBoundary>`
+
+   -  It's rendering
+
+-  We can force an error by breaking `getProducts` (change URL)
+   -  But, error boundaries don't work for async code
+   -  To make it work
+      -  Create a state value for an error
+      -  In the `Promise.catch()`, set the error state with the error received
+      -  Before rendering JSX (`return`), if error is set, throw it
+-  And it shows "something went wrong" as expected
+
+**COMMIT: 2.0.5 - FEAT: get product data from API with useEffect()**
