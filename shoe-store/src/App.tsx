@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { SetStateAction, useEffect, useState } from 'react';
 import './App.css';
 import Footer from './Footer';
 import Header from './Header';
@@ -13,15 +13,17 @@ export default function App() {
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		setIsLoading(true);
-		getProducts('shoes')
-			.then((res) => {
-				setProducts(res);
-			})
-			.catch((err) => setError(err))
-			.finally(() => {
-				setIsLoading(false);
-			});
+		async function loadProducts() {
+			setIsLoading(true);
+			try {
+				const products = await getProducts('shoes');
+				setProducts(products);
+			} catch (err) {
+				setError(err as SetStateAction<any>);
+			}
+			setIsLoading(false);
+		}
+		loadProducts();
 	}, []);
 
 	function renderProduct(p: IProduct) {

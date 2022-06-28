@@ -200,3 +200,18 @@ API calls aren't always speedy.
    -  I can see some readability benefits to his solution with a small change (`// else` to make else-ness explicit without coding an `else`)
 
 **COMMIT: 2.0.6 - FEAT: show a spinner when the page is loading**
+
+## Async/await
+
+Finally. It's less that I dislike Promise `.then()` syntax than I prefer `async/await`. (And a proper `Result` class instead of `try/catch`.)
+
+Problem: `useEffect` can't take an async function, so pass it a function that contains an async function.
+
+-  Declare the async function in the anonymous function and call it
+   -  The async function needs to `try/catch` to handle errors
+   -  Because the `catch` isn't throwing the error up the chain, I can set `isLoading` false after
+      -  He uses a `try/catch/finally`
+      -  I'm not fond of that in this case because `finally` is only required if I throw the error up the chain
+      -  Again, coding standards may say otherwise
+
+**COMMIT: 2.0.7 - REFACTOR: replace Promise .then() syntax in useEffect with async/await**
