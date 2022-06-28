@@ -223,3 +223,7 @@ Use a custom hook to get the state and `useEffect` mess out of the component its
 Note: I've looked ahead. He's throwing everything into `src`. I have a feeling I'm going to organize things my way starting with this change.
 
 **COMMIT: 2.0.8 - CHORE: add directories for components and hooks so everything isn't dumped into src**
+
+-  Set delay on json-server back to 0 (in `package.json`) because we're done testing the loading spinner
+
+**COMMIT: 2.0.9 - CHORE: undo json-server delay from previous section testing**
