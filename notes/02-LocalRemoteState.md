@@ -179,3 +179,24 @@ Third party library
 -  And it shows "something went wrong" as expected
 
 **COMMIT: 2.0.5 - FEAT: get product data from API with useEffect()**
+
+## Loading, please stand by
+
+API calls aren't always speedy.
+
+-  Tell json-server to slow down with a 1000ms delay (in `package.json`); restart app
+-  Add state to track loading status
+   -  He defaults to true, which is fine
+   -  But I'll set true when `useEffect()` because whenever the `useEffect()` runs, we're loading
+   -  And I'll add a `.finally()` to the Promise to always stop loading
+   -  Let's see how he did it
+-  Yep. Same solution, except he isn't setting true when `useEffect()` starts
+
+-  Now, display a spinner (`Spinner.jsx`) if we're loading
+   -  Change return to a ternary on `isLoading`, return `<Spinner />` if true, shoes if false
+   -  Let's see what he does
+-  He writes an `if` before the shoe return to return `<Spinner />` instead of a ternary
+   -  Either way works, coding standards would determine the "right" answer
+   -  I can see some readability benefits to his solution with a small change (`// else` to make else-ness explicit without coding an `else`)
+
+**COMMIT: 2.0.6 - FEAT: show a spinner when the page is loading**

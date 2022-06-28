@@ -4,18 +4,24 @@ import Footer from './Footer';
 import Header from './Header';
 
 import { getProducts, IProduct } from 'services/productService';
+import Spinner from 'Spinner';
 
 export default function App() {
 	const [selectedSize, setSelectedSize] = useState('');
 	const [products, setProducts] = useState([] as IProduct[]);
 	const [error, setError] = useState(null);
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
+		setIsLoading(true);
 		getProducts('shoes')
 			.then((res) => {
 				setProducts(res);
 			})
-			.catch((err) => setError(err));
+			.catch((err) => setError(err))
+			.finally(() => {
+				setIsLoading(false);
+			});
 	}, []);
 
 	function renderProduct(p: IProduct) {
@@ -48,6 +54,8 @@ export default function App() {
 
 	if (error) throw error;
 
+	if (isLoading) return <Spinner />;
+	// else
 	return (
 		<>
 			<div className="content">
