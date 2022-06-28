@@ -227,3 +227,22 @@ Note: I've looked ahead. He's throwing everything into `src`. I have a feeling I
 -  Set delay on json-server back to 0 (in `package.json`) because we're done testing the loading spinner
 
 **COMMIT: 2.0.9 - CHORE: undo json-server delay from previous section testing**
+
+### My version
+
+We want a custom hook to pull the `useEffect` and at least part of the state out of `App`. Looking at it, I think `products`, `error`, and `isLoading` definitely belong in the hook. I could put `selectedSize` and `filteredProducts` in the hook too.
+
+-  Does it make sense to put everything in one hook?
+-  Or should I have a hook for products (for cases where I don't have a filter) and a separate hook for filtered products?
+-  Can I use a hook in a hook?
+   -  Maybe; [React docs](https://reactjs.org/docs/hooks-custom.html#extracting-a-custom-hook) say a custom hook can call other hooks
+   -  Not sure if that means a custom hook can call another custom hook
+-  If the custom hook needs to return several items, is best practice to return as an array or as an object
+   -  I'm going with object, but switching isn't hard
+   -  Also, [this post](https://dev.to/namick/writing-your-own-react-hooks-the-return-value-3lp6) seems to offer a sane perspective
+
+I'll draft a `useProducts` hook that gets products. I could use it to get products and other data, then pass products to a `filteredProducts` hook if that makes sense. Then I'll see what he does.
+
+Written and seems to work.
+
+**COMMIT: 2.0.10 - REFACTOR: move products load to a custom hook (my attempt before watching the instructor)**

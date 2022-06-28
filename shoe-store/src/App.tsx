@@ -1,30 +1,16 @@
-import React, { SetStateAction, useEffect, useState } from 'react';
+import React, { useState } from 'react';
+
 import './App.css';
 import Footer from './components/Footer';
 import Header from './components/Header';
-
-import { getProducts, IProduct } from 'services/productService';
 import Spinner from 'components/Spinner';
+
+import { useProducts } from 'hooks/useProducts';
+import { IProduct } from 'services/productService';
 
 export default function App() {
 	const [selectedSize, setSelectedSize] = useState('');
-	const [products, setProducts] = useState([] as IProduct[]);
-	const [error, setError] = useState(null);
-	const [isLoading, setIsLoading] = useState(true);
-
-	useEffect(() => {
-		async function loadProducts() {
-			setIsLoading(true);
-			try {
-				const products = await getProducts('shoes');
-				setProducts(products);
-			} catch (err) {
-				setError(err as SetStateAction<any>);
-			}
-			setIsLoading(false);
-		}
-		loadProducts();
-	}, []);
+	const { products, error, isLoading } = useProducts();
 
 	function renderProduct(p: IProduct) {
 		return (
