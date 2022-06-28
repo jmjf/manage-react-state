@@ -1,10 +1,10 @@
 import React, { SetStateAction, useEffect, useState } from 'react';
 import './App.css';
-import Footer from './Footer';
-import Header from './Header';
+import Footer from './components/Footer';
+import Header from './components/Header';
 
 import { getProducts, IProduct } from 'services/productService';
-import Spinner from 'Spinner';
+import Spinner from 'components/Spinner';
 
 export default function App() {
 	const [selectedSize, setSelectedSize] = useState('');

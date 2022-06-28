@@ -1,4 +1,4 @@
-import ErrorBoundary from 'ErrorBoundary';
+import ErrorBoundary from 'components/ErrorBoundary';
 import ReactDOM from 'react-dom';
 import App from './App';
 

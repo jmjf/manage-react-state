@@ -215,3 +215,11 @@ Problem: `useEffect` can't take an async function, so pass it a function that co
       -  Again, coding standards may say otherwise
 
 **COMMIT: 2.0.7 - REFACTOR: replace Promise .then() syntax in useEffect with async/await**
+
+## Custom hooks
+
+Use a custom hook to get the state and `useEffect` mess out of the component itself.
+
+Note: I've looked ahead. He's throwing everything into `src`. I have a feeling I'm going to organize things my way starting with this change.
+
+**COMMIT: 2.0.8 - CHORE: add directories for components and hooks so everything isn't dumped into src**
