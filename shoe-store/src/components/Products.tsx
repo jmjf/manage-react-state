@@ -5,14 +5,17 @@ import Spinner from './Spinner';
 import { useFetch } from 'hooks/useFetch';
 
 import { IProduct } from 'services/productService';
+import { useParams } from 'react-router';
 
 export function Products() {
 	const [selectedSize, setSelectedSize] = useState('');
+	const { category } = useParams();
+
 	const {
 		data: products,
 		error,
 		isLoading,
-	} = useFetch<IProduct>('products?category=shoes');
+	} = useFetch<IProduct>(`products?category=${category}`);
 
 	function renderProduct(p: IProduct) {
 		return (

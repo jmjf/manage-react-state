@@ -34,3 +34,20 @@
 -  Navigate to see the components display (just the page name in an h1)
 
 **COMMIT: 3.0.2 - FEAT: Add new components; add routes for those components**
+
+## Use placeholders
+
+Today we sell shoes, tomorrow we'll sell yoga balls, books, lions, tigers, and bears. Oh my! So let's put the product category in the route so we can display different categories of products.
+
+Make the landing page a welcome message instead of shoes
+
+-  Copy the `Products` route
+-  Change the `/` route to render a static welcome message
+-  Change the products page path to `/:category`; `:category` is a placeholder
+-  In `Products`, replace the hardcoded `shoes` with the placeholder
+   -  `const { category } = useParms()`; attribute name matches placeholder; (`useParams` is from `react-router`)
+   -  Use to compose the URL
+   -  He says `useParams` is in `react-router-dom`, but VS Code says `react-router` and it works
+      -  Also looked at it in Dev Tools to see it's working
+
+**COMMIT: 3.0.3 - REFACTOR: use a route parameter (placeholder) to identify the category for Products instead of hardcoded shoes**
