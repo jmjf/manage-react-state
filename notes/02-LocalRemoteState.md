@@ -271,3 +271,5 @@ Now to use `useFetch` in the component.
 **COMMIT: 2.0.11 - REFACTOR: make generic hook useFetch and use it in App**
 
 He does the same thing, so nothing to change. (Amend commit.)
+
+**COMMIT: 2.0.12 - CHORE: remove useProducts**
