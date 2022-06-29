@@ -6,6 +6,7 @@ import { useFetch } from 'hooks/useFetch';
 
 import { IProduct } from 'services/productService';
 import { useParams } from 'react-router';
+import { PageNotFound } from './PageNotFound';
 
 export function Products() {
 	const [selectedSize, setSelectedSize] = useState('');
@@ -48,6 +49,8 @@ export function Products() {
 	if (error) throw error;
 
 	if (isLoading) return <Spinner />;
+	// else
+	if (products.length === 0) return <PageNotFound />;
 	// else
 	return (
 		<>

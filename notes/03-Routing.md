@@ -51,3 +51,13 @@ Make the landing page a welcome message instead of shoes
       -  Also looked at it in Dev Tools to see it's working
 
 **COMMIT: 3.0.3 - REFACTOR: use a route parameter (placeholder) to identify the category for Products instead of hardcoded shoes**
+
+## 404
+
+If I navigate to an unknown category (bears), I get a blank page. I want a 404 page instead so the user has a clue what's going on.
+
+-  I'm guessing that means a NotFound component and some way to default the route to it
+-  I made my 404 more interesting, now for falling back when not found
+-  In `Products`, if `products.length === 0` show `PageNotFound`
+
+**COMMIT: 3.0.4 - FEAT: add a not found page and show it when no products are found**
