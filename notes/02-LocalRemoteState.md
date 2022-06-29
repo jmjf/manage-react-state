@@ -246,3 +246,28 @@ I'll draft a `useProducts` hook that gets products. I could use it to get produc
 Written and seems to work.
 
 **COMMIT: 2.0.10 - REFACTOR: move products load to a custom hook (my attempt before watching the instructor)**
+
+He's writing a generic "fetch" hook instead of a products hook. Interesting and somewhat abstract, but I can see why it would make sense, maybe.
+
+-  Or is he?
+-  His `service` directory becomes useless unless we pass the get function to the hook
+-  I've drafted my thoughts on the solution, but I'll see what he does
+
+-  He's accepting a URL string
+   -  So, maybe he'll move code out of `services`
+   -  Ah, I bet he'll use the environment base and add to the URL, like he does in services; he does
+   -  Where I'd coded to treat HTTP errors as errors, he's just returning the response; not sure that's a good idea
+   -  He returns an object
+   -  And he adds error handling, through where I `setError()` in the `else`, he just throws the response and lets the `catch` catch it
+
+What he's doing makes sense to me, so I've made some small adjustments to my `useFetch`.
+
+Now to use `useFetch` in the component.
+
+-  Where I was just calling 'useProducts`, I need to pass a URL suffix to the hook now
+-  `useFetch` needs a generic so the caller gets the expected type
+-  I could change `products` to `data` in `App`, but I'm chosing to rename in the destructure instead
+
+**COMMIT: 2.0.11 - REFACTOR: make generic hook useFetch and use it in App**
+
+He does the same thing, so nothing to change. (Amend commit.)

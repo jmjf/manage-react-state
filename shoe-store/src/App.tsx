@@ -5,12 +5,17 @@ import Footer from './components/Footer';
 import Header from './components/Header';
 import Spinner from 'components/Spinner';
 
-import { useProducts } from 'hooks/useProducts';
+import { useFetch } from 'hooks/useFetch';
+
 import { IProduct } from 'services/productService';
 
 export default function App() {
 	const [selectedSize, setSelectedSize] = useState('');
-	const { products, error, isLoading } = useProducts();
+	const {
+		data: products,
+		error,
+		isLoading,
+	} = useFetch<IProduct>('products?category=shoes');
 
 	function renderProduct(p: IProduct) {
 		return (
