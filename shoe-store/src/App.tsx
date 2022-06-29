@@ -1,7 +1,10 @@
+import { Route, Routes } from 'react-router';
+
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import { Products } from 'components/Products';
-import React from 'react';
+import { ProductDetail } from 'components/ProductDetail';
+import { Cart } from 'components/Cart';
 
 import './App.css';
 
@@ -11,7 +14,20 @@ export default function App() {
 			<div className="content">
 				<Header />
 				<main>
-					<Products />
+					<Routes>
+						<Route
+							path="/"
+							element={<Products />}
+						/>
+						<Route
+							path="/product-detail"
+							element={<ProductDetail />}
+						/>
+						<Route
+							path="/cart"
+							element={<Cart />}
+						/>
+					</Routes>
 				</main>
 			</div>
 			<Footer />
