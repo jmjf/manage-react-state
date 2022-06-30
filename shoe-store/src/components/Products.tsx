@@ -7,6 +7,7 @@ import { useFetch } from 'hooks/useFetch';
 import { IProduct } from 'services/productService';
 import { useParams } from 'react-router';
 import { PageNotFound } from './PageNotFound';
+import { Link } from 'react-router-dom';
 
 export function Products() {
 	const [selectedSize, setSelectedSize] = useState('');
@@ -24,14 +25,14 @@ export function Products() {
 				key={p.id}
 				className="product"
 			>
-				<a href="/">
+				<Link to={`${p.id}`}>
 					<img
 						src={`/images/${p.image}`}
 						alt={p.name}
 					/>
 					<h3>{p.name}</h3>
 					<p>${p.price}</p>
-				</a>
+				</Link>
 			</div>
 		);
 	}

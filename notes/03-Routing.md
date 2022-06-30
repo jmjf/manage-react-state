@@ -88,3 +88,26 @@ I got it working by
 So, now he's detouring to client side navigation. Let's
 
 **COMMIT: 3.0.5 - FEAT: route to product-detail page and display the product info**
+
+I'm not sure what he's doing here, so I'll follow along
+
+-  In `Header` build out a nav tree using `Link`
+   -  Logo image links to root (`/`)
+   -  Shoes text links to `/shoes`
+   -  Cart text links to `/cart`
+   -  Check it works
+-  Change `Link` to `NavLink` for Shoes and Cart
+   -  Define `activeStyle` as a class with `color: 'purple'`
+      -  I'm adding underline because accessibility says don't use color only (color blind people)
+   -  His code doesn't work. React Router removed the `activeStyle` prop and just uses `style`
+   -  Code I found on the React Router site didn't work either because `style` won't accept `undefined`, requires `{}`
+   -  Works now
+-  In `Products`, he wants to use `Link` to link to the product detail
+   -  `renderProduct` includes an `<a href="/">` around the image, name, and price, so I guess we'll be changing that
+   -  Probably something like ` <Link to={``${p.category}/${p.id}``}>`
+   -  Nope; looks like the route appends to the base page's route, so only the id
+      -  Maybe if I put a `/` in front of the category
+      -  Yes, that works, so useful to remember, now back to plain id
+      -  He uses the `/category/id` version; investigate why later
+
+**COMMIT: 3.0.6 - FEAT: clicking on a product on the Products page navigates to the corresponding ProductDetail**
