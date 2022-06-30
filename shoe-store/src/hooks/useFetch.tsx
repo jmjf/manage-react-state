@@ -1,7 +1,7 @@
 import { SetStateAction, useEffect, useState } from 'react';
 
 interface IUseFetchResult<DataType> {
-	data: DataType[];
+	data: DataType | DataType[];
 	error: any;
 	isLoading: boolean;
 }

@@ -61,3 +61,30 @@ If I navigate to an unknown category (bears), I get a blank page. I want a 404 p
 -  In `Products`, if `products.length === 0` show `PageNotFound`
 
 **COMMIT: 3.0.4 - FEAT: add a not found page and show it when no products are found**
+
+## Use placeholders (route parameters) on the product detail page
+
+For product detail page, he wants to have category + product id in the URL.
+
+I'm looking at the way he's defining routes and I'm not sure I like it. I'm not sure I buy the idea of "shoes" as a resource. I'd really like to see a URL more like `/products?category=:category` or `/products/:category`. For product detail, I think I'd like `product-detail/:id`. For the first case, I see React Router has `useSearchParms()`, which would lead to something like:
+
+```tsx
+const [searchParams, setSearchParams] = useSearchParams();
+const category = searchParams.get('category');
+```
+
+For now, I'll stick with what he's doing because there may be something about this coming up in a few minutes. If not, I may come back later and adjust.
+
+So, now he's replacing the `product-detail` route with a `:category/:id` route. And then I suspect he'll use id in the product detail to show a specific product eventually.
+
+I got it working by
+
+-  Allowing `useFetch` to return a single object or an array (because get for an id returns a single object)
+-  Don't alias `data` to `products`.
+-  If `Array.isArray(data)` is false, `Array.of(data)` -- assign to `products`
+   -  I could force the result to always be an array in `useFetch` and put all the array checking in one place, but I'm not sure that's the best answer.
+-  Add code to `ProductDetail` similar to `Products` to get data, handle loading, errors, and not found, and uncomment "TODO" code to get the right structure.
+
+So, now he's detouring to client side navigation. Let's
+
+**COMMIT: 3.0.5 - FEAT: route to product-detail page and display the product info**

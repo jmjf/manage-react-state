@@ -12,11 +12,11 @@ export function Products() {
 	const [selectedSize, setSelectedSize] = useState('');
 	const { category } = useParams();
 
-	const {
-		data: products,
-		error,
-		isLoading,
-	} = useFetch<IProduct>(`products?category=${category}`);
+	const { data, error, isLoading } = useFetch<IProduct>(
+		`products?category=${category}`
+	);
+
+	const products = Array.isArray(data) ? data : Array.of(data);
 
 	function renderProduct(p: IProduct) {
 		return (

@@ -24,7 +24,7 @@ export default function App() {
 							element={<Products />}
 						/>
 						<Route
-							path="/product-detail"
+							path="/:category/:id"
 							element={<ProductDetail />}
 						/>
 						<Route
