@@ -129,3 +129,17 @@ Next he adds the not found page.
 -  Also found an issue in the not found page message selection that could return an index of 4 because I was rounding the mod
 
 **COMMIT: 3.0.7 - FIX: load, error, and not found handling (ProductDetail, Products); PageNotFound errors**
+
+## useNavigate
+
+He wants an "add to cart" button below the product price on the product detail page.
+
+-  He's wrapping it in a `<p>` so it isn't on the same line
+-  According to router docs, `useNavigate` returns a function that lets you navigate to a route programmatically
+-  So, `onClick`, should add it to the cart and maybe navigate to it?
+   -  We don't have a cart data structure yet, so I'm guessing just navigate to cart
+   -  Add a handler
+   -  That works, let's see what he does
+   -  Basically the same but he uses an inline handler; I know more is coming
+
+**COMMIT: 3.0.8 - FEAT: add an "add to cart" button on ProductDetail**
