@@ -111,3 +111,21 @@ I'm not sure what he's doing here, so I'll follow along
       -  He uses the `/category/id` version; investigate why later
 
 **COMMIT: 3.0.6 - FEAT: clicking on a product on the Products page navigates to the corresponding ProductDetail**
+
+## Get product details working
+
+Now outlines and says, "Try on your own" what I've already done
+
+-  Gets id with `useParams`
+-  Uses `useFetch` to get the data
+
+Except for managing the types, same thing.
+
+Next he adds the not found page.
+
+-  Simplified type management to work better with not found
+-  Determined that order of checking for loading, errors, not found matters, so changed it (also in Products)
+-  Found a bug on the not found page (image URL needed a `/` in front)
+-  Also found an issue in the not found page message selection that could return an index of 4 because I was rounding the mod
+
+**COMMIT: 3.0.7 - FIX: load, error, and not found handling (ProductDetail, Products); PageNotFound errors**

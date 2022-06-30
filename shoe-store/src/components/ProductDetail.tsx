@@ -1,23 +1,21 @@
 import { useFetch } from 'hooks/useFetch';
 import { useParams } from 'react-router';
-import { IProduct } from 'services/productService';
+
 import { PageNotFound } from './PageNotFound';
 import Spinner from './Spinner';
 
+import { IProduct } from 'services/productService';
+
 export function ProductDetail() {
 	const { id } = useParams();
-
 	const { data, isLoading, error } = useFetch<IProduct>(`products/${id}`);
-
-	const products = data && Array.isArray(data) ? data : Array.of(data);
-
-	if (error) throw error;
 
 	if (isLoading) return <Spinner />;
 
-	if (products.length === 0) return <PageNotFound />;
+	if (!data) return <PageNotFound />;
+	const product = Array.isArray(data) ? data[0] : data;
 
-	const product = products[0];
+	if (error) throw error;
 
 	return (
 		<div id="product-detail">

@@ -9,10 +9,10 @@ export function PageNotFound() {
 	return (
 		<>
 			<img
-				src="images/404.png"
+				src="/images/404.png"
 				alt="Emergency food says"
 			></img>
-			<h2>{messages[Math.round((Math.random() * 42) % 4)]}</h2>
+			<h2>{messages[Math.round(Math.random() * 999) % 4]}</h2>
 		</>
 	);
 }

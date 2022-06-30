@@ -47,11 +47,11 @@ export function Products() {
 			  )
 			: products;
 
-	if (error) throw error;
-
 	if (isLoading) return <Spinner />;
 	// else
 	if (products.length === 0) return <PageNotFound />;
+	// else
+	if (error) throw error;
 	// else
 	return (
 		<>
