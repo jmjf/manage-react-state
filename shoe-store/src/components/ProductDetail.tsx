@@ -10,11 +10,11 @@ import { IProduct } from 'models/Product';
 import { ICartItem } from 'models/CartItem';
 
 interface IProductDetailProps {
-	cart: ICartItem[];
+	cartItems: ICartItem[];
 	addToCart: (id: number, sku: string) => void;
 }
 
-export function ProductDetail({ cart, addToCart }: IProductDetailProps) {
+export function ProductDetail({ cartItems, addToCart }: IProductDetailProps) {
 	const { id } = useParams();
 	const { data, isLoading, error } = useFetch<IProduct>(`products/${id}`);
 	const [selectedSku, setSelectedSku] = useState('');

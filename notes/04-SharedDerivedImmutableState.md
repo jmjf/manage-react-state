@@ -121,3 +121,15 @@ Now to get size from the sku
 -  Pick the right sku from the list of skus for the product
 
 **COMMIT: 4.0.6 - FEAT: show size for cart items**
+
+Watch video until he gets to updating the ordered quantity
+
+-  For update qty, he's passing a function prop because cart state is in the `App` function; will need to build there
+-  Then selecting from change qty select will call update function
+
+`updateQuantity(sku, newQuantity)`
+
+-  `map` cart and update quantity
+-  (if qty is 0, need to remove from the cart (next video), for now just show 0)
+
+**COMMIT: 4.0.7 - FEAT: allow user to change quantity in cart (not handling 0 yet)**

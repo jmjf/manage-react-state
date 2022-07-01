@@ -12,10 +12,10 @@ import { ICartItem } from 'models/CartItem';
 import './App.css';
 
 export default function App() {
-	const [cart, setCart] = useState([] as ICartItem[]);
+	const [cartItems, setCartItems] = useState([] as ICartItem[]);
 
 	function addToCart(id: number, sku: string): void {
-		setCart((oldCart) => {
+		setCartItems((oldCart) => {
 			// I need a copy of the cart so I can setState anyway, so first copy and try to update as we do
 			const newCart = oldCart.map((cartItem) =>
 				cartItem.sku === sku
@@ -25,6 +25,17 @@ export default function App() {
 			// If the item isn't found in the new cart
 			if (!newCart.find((cartItem) => cartItem.sku === sku))
 				newCart.push({ id, sku, quantity: 1 });
+			return newCart;
+		});
+	}
+
+	function updateQuantity(sku: string, newQuantity: number): void {
+		setCartItems((oldCart) => {
+			const newCart = oldCart.map((cartItem) =>
+				cartItem.sku === sku
+					? { ...cartItem, quantity: newQuantity }
+					: cartItem
+			);
 			return newCart;
 		});
 	}
@@ -47,14 +58,19 @@ export default function App() {
 							path="/:category/:id"
 							element={
 								<ProductDetail
-									cart={cart}
+									cartItems={cartItems}
 									addToCart={addToCart}
 								/>
 							}
 						/>
 						<Route
 							path="/cart"
-							element={<Cart cart={cart} />}
+							element={
+								<Cart
+									cartItems={cartItems}
+									updateQuantity={updateQuantity}
+								/>
+							}
 						/>
 					</Routes>
 				</main>

@@ -5,11 +5,12 @@ import { arrayify } from 'utils';
 import Spinner from './Spinner';
 
 interface ICartProps {
-	cart: ICartItem[];
+	cartItems: ICartItem[];
+	updateQuantity: (sku: string, newQuantity: number) => void;
 }
 
-export function Cart({ cart }: ICartProps) {
-	const urls = cart.map((cartItem) => `products/${cartItem.id}`);
+export function Cart({ cartItems, updateQuantity }: ICartProps) {
+	const urls = cartItems.map((cartItem) => `products/${cartItem.id}`);
 	const { data, isLoading, error } = useFetchAll<IProduct>(urls);
 	const products = arrayify<IProduct>(data);
 
@@ -38,7 +39,7 @@ export function Cart({ cart }: ICartProps) {
 						<select
 							aria-label={`Select quantity for ${name} size {size}`}
 							onChange={(e) => {
-								/* updateQuantity */ return;
+								updateQuantity(sku, parseInt(e.target.value));
 							}}
 							value={quantity}
 						>
@@ -63,7 +64,7 @@ export function Cart({ cart }: ICartProps) {
 	return (
 		<section id="cart">
 			<h1>Cart</h1>
-			<ul>{cart.map(renderItem)}</ul>
+			<ul>{cartItems.map(renderItem)}</ul>
 		</section>
 	);
 }
