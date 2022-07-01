@@ -83,3 +83,16 @@ Who needs the cart state?
       -  Same result, different strategy
 
 **COMMIT: 4.0.3 - FEAT: make add to cart work; add a basic cart display to show it works**
+
+## Build real cart display
+
+Customer wants to see a better cart with more details about the products in the cart, remove controls, etc.
+
+-  He starts by pasting a pile of starter code
+   -  Ends by returning a `<section>` that is mostly `<ul>{cart.map(renderItem)}</ul>`
+   -  So, `renderItem` must return a `<li>`
+   -  I've set up the basic structure based on his code in the video, but left the interaction and data retrieval out for now; it renders and looks like what I'd expect, so now to the code interaction bits
+      -  Key points i see, he's getting data for all products in the cart at the top of the component (shared)
+      -  We're going to add a "fetch all" hook that returns a products array for a list of products (variation on existing fetch hook)
+      -  Get item specific product data in `renderItem`
+      -  Control loading/error in the main component
