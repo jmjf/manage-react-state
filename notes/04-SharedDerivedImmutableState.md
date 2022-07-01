@@ -96,3 +96,22 @@ Customer wants to see a better cart with more details about the products in the 
       -  We're going to add a "fetch all" hook that returns a products array for a list of products (variation on existing fetch hook)
       -  Get item specific product data in `renderItem`
       -  Control loading/error in the main component
+
+**COMMIT: 4.0.4 - FEAT: outline basic cart item display and get it working with static data**
+
+He copy/pastes `useFetchAll`, so let me read it and set it up myself
+
+-  `useEffect` creaets the Promises, then uses `Promise.all` to resolve them; this use of Promises instead of `async/await` makes sense to me (parallelism)
+-  Point to note about how this code is written: each Promise returns an object on success, `Promise.all`'s `then()` gets the array of those objects
+   -  This is intuitive when I think about it a few seconds (but I confirmed by looking up)
+-  Okay, I think I have this set up and understood, let's see what he says (nothing I hadn't already figured out)
+
+So, now we can `useFetchAll` to get all the products in the cart and then use that data for each item
+
+-  Build list of URLs from cart items
+-  `useFetchAll` to get data
+-  In `renderItem`, get appropriate product's data
+   -  Everything except size from sku so far
+-  Added CSS to move the detail text off the image so it looks less ugly
+
+**COMMIT: 4.0.5 - FEAT: show item details for cart items (except size)**

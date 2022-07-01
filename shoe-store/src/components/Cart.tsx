@@ -1,6 +1,7 @@
 import { useFetchAll } from 'hooks/useFetchAll';
 import { ICartItem } from 'models/CartItem';
 import { IProduct } from 'models/Product';
+import { arrayify } from 'utils';
 import Spinner from './Spinner';
 
 interface ICartProps {
@@ -8,8 +9,15 @@ interface ICartProps {
 }
 
 export function Cart({ cart }: ICartProps) {
+	const urls = cart.map((cartItem) => `products/${cartItem.id}`);
+	const { data, isLoading, error } = useFetchAll<IProduct>(urls);
+	const products = arrayify<IProduct>(data);
+
 	function renderItem(cartItem: ICartItem) {
 		const { id, sku, quantity } = cartItem;
+		const { name, price, image, skus } = products.find(
+			(product) => product.id === id
+		) as IProduct;
 
 		return (
 			<li
@@ -17,14 +25,12 @@ export function Cart({ cart }: ICartProps) {
 				className="cart-item"
 			>
 				<img
-					src="/images/shoe1.jpg"
-					alt="shoe1"
+					src={`/images/${image}`}
+					alt={name}
 				/>
-				<div>
-					<h3>
-						/name/ id: {id} sku: {sku} qty: {quantity}
-					</h3>
-					<p>$/price/</p>
+				<div className="cart-item-detail">
+					<h3>{name}</h3>
+					<p>${price}</p>
 					<p>Size: /size/</p>
 					<p>
 						<select
@@ -47,10 +53,10 @@ export function Cart({ cart }: ICartProps) {
 		);
 	}
 
-	// if (isLoading) return <Spinner />;
+	if (isLoading) return <Spinner />;
 	// maybe should do something if no items???
 	// else
-	// if (error) throw error;
+	if (error) throw error;
 	// else
 	return (
 		<section id="cart">

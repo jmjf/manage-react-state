@@ -8,6 +8,7 @@ import Spinner from './Spinner';
 import { PageNotFound } from './PageNotFound';
 
 import { IProduct } from 'models/Product';
+import { arrayify } from 'utils';
 
 export function Products() {
 	const [selectedSize, setSelectedSize] = useState('');
@@ -17,7 +18,7 @@ export function Products() {
 		`products?category=${category}`
 	);
 
-	const products = Array.isArray(data) ? data : Array.of(data);
+	const products = arrayify<IProduct>(data);
 
 	function renderProduct(p: IProduct) {
 		return (

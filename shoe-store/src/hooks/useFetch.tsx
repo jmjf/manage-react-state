@@ -1,6 +1,6 @@
 import { SetStateAction, useEffect, useState } from 'react';
 
-interface IUseFetchResult<DataType> {
+export interface IUseFetchResult<DataType> {
 	data: DataType | DataType[];
 	error: any;
 	isLoading: boolean;
