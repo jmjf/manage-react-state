@@ -133,3 +133,10 @@ Watch video until he gets to updating the ordered quantity
 -  (if qty is 0, need to remove from the cart (next video), for now just show 0)
 
 **COMMIT: 4.0.7 - FEAT: allow user to change quantity in cart (not handling 0 yet)**
+
+Remove item if quantity is 0 (Remove selected)
+
+-  Filter the new cart to remove the sku
+-  Requires `let` instead of `const` for `newCart`
+
+**COMMIT: 4.0.8 - FEAT: allow user to remove a product from the cart**

@@ -31,11 +31,14 @@ export default function App() {
 
 	function updateQuantity(sku: string, newQuantity: number): void {
 		setCartItems((oldCart) => {
-			const newCart = oldCart.map((cartItem) =>
+			let newCart = oldCart.map((cartItem) =>
 				cartItem.sku === sku
 					? { ...cartItem, quantity: newQuantity }
 					: cartItem
 			);
+			if (newQuantity === 0) {
+				newCart = newCart.filter((cartItem) => cartItem.sku !== sku);
+			}
 			return newCart;
 		});
 	}
