@@ -1,4 +1,4 @@
-interface ISku {
+export interface ISku {
 	sku: string;
 	size: number;
 }

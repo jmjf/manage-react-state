@@ -1,6 +1,6 @@
 import { useFetchAll } from 'hooks/useFetchAll';
 import { ICartItem } from 'models/CartItem';
-import { IProduct } from 'models/Product';
+import { IProduct, ISku } from 'models/Product';
 import { arrayify } from 'utils';
 import Spinner from './Spinner';
 
@@ -19,6 +19,8 @@ export function Cart({ cart }: ICartProps) {
 			(product) => product.id === id
 		) as IProduct;
 
+		const { size } = skus.find((skuItem) => skuItem.sku === sku) as ISku;
+
 		return (
 			<li
 				key={sku}
@@ -31,10 +33,10 @@ export function Cart({ cart }: ICartProps) {
 				<div className="cart-item-detail">
 					<h3>{name}</h3>
 					<p>${price}</p>
-					<p>Size: /size/</p>
+					<p>Size: {size}</p>
 					<p>
 						<select
-							aria-label={`Select quantity for /name/ size /size/`}
+							aria-label={`Select quantity for ${name} size {size}`}
 							onChange={(e) => {
 								/* updateQuantity */ return;
 							}}

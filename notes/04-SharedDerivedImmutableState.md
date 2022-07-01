@@ -115,3 +115,9 @@ So, now we can `useFetchAll` to get all the products in the cart and then use th
 -  Added CSS to move the detail text off the image so it looks less ugly
 
 **COMMIT: 4.0.5 - FEAT: show item details for cart items (except size)**
+
+Now to get size from the sku
+
+-  Pick the right sku from the list of skus for the product
+
+**COMMIT: 4.0.6 - FEAT: show size for cart items**
