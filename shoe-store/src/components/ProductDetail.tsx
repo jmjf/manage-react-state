@@ -6,9 +6,15 @@ import { useNavigate, useParams } from 'react-router';
 import { PageNotFound } from './PageNotFound';
 import Spinner from './Spinner';
 
-import { IProduct } from 'services/productService';
+import { IProduct } from 'models/Product';
+import { ICartItem } from 'models/CartItem';
 
-export function ProductDetail() {
+interface IProductDetailProps {
+	cart: ICartItem[];
+	addToCart: (id: number, sku: string) => void;
+}
+
+export function ProductDetail({ cart, addToCart }: IProductDetailProps) {
 	const { id } = useParams();
 	const { data, isLoading, error } = useFetch<IProduct>(`products/${id}`);
 	const [selectedSku, setSelectedSku] = useState('');
@@ -20,7 +26,7 @@ export function ProductDetail() {
 
 	const onAddToCart = async (ev: React.MouseEvent<HTMLButtonElement>) => {
 		ev.preventDefault();
-		// await addProductToCart(id) // or do we need sku for size?
+		addToCart(product.id, selectedSku);
 		navigate('/cart', { replace: true });
 	};
 

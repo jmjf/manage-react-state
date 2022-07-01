@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Route, Routes } from 'react-router';
 
 import Footer from 'components/Footer';
@@ -6,9 +7,28 @@ import { Products } from 'components/Products';
 import { ProductDetail } from 'components/ProductDetail';
 import { Cart } from 'components/Cart';
 
+import { ICartItem } from 'models/CartItem';
+
 import './App.css';
 
 export default function App() {
+	const [cart, setCart] = useState([] as ICartItem[]);
+
+	function addToCart(id: number, sku: string): void {
+		setCart((oldCart) => {
+			// I need a copy of the cart so I can setState anyway, so first copy and try to update as we do
+			const newCart = oldCart.map((cartItem) =>
+				cartItem.sku === sku
+					? { ...cartItem, quantity: cartItem.quantity + 1 }
+					: cartItem
+			);
+			// If the item isn't found in the new cart
+			if (!newCart.find((cartItem) => cartItem.sku === sku))
+				newCart.push({ id, sku, quantity: 1 });
+			return newCart;
+		});
+	}
+
 	return (
 		<>
 			<div className="content">
@@ -25,11 +45,16 @@ export default function App() {
 						/>
 						<Route
 							path="/:category/:id"
-							element={<ProductDetail />}
+							element={
+								<ProductDetail
+									cart={cart}
+									addToCart={addToCart}
+								/>
+							}
 						/>
 						<Route
 							path="/cart"
-							element={<Cart />}
+							element={<Cart cart={cart} />}
 						/>
 					</Routes>
 				</main>

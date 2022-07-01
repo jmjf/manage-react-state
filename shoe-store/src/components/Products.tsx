@@ -1,13 +1,13 @@
 import { useState } from 'react';
-
-import Spinner from './Spinner';
+import { Link } from 'react-router-dom';
 
 import { useFetch } from 'hooks/useFetch';
-
-import { IProduct } from 'services/productService';
 import { useParams } from 'react-router';
+
+import Spinner from './Spinner';
 import { PageNotFound } from './PageNotFound';
-import { Link } from 'react-router-dom';
+
+import { IProduct } from 'models/Product';
 
 export function Products() {
 	const [selectedSize, setSelectedSize] = useState('');
