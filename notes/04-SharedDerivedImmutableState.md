@@ -140,3 +140,14 @@ Remove item if quantity is 0 (Remove selected)
 -  Requires `let` instead of `const` for `newCart`
 
 **COMMIT: 4.0.8 - FEAT: allow user to remove a product from the cart**
+
+Catch up video to see if he has any ideas I like better.
+
+-  Just thought of something as he started talking about `filter`
+   -  If qty is 0, just `filter`, don't `map` because `filter` also returns a new array; that works
+
+Okay, nothing exciting. He used a ternary in `updateQuantity` where I chose an `if...else` due to the way I'm formatting (and because `map` uses a ternary, could get confusing with nested ternaries)
+
+Next step will be to show total number of items in the header (deriving state).
+
+**COMMIT: 4.0.9 - DOCS: catch up video to where I am; get ready for next feature**

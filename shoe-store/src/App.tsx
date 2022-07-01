@@ -31,15 +31,15 @@ export default function App() {
 
 	function updateQuantity(sku: string, newQuantity: number): void {
 		setCartItems((oldCart) => {
-			let newCart = oldCart.map((cartItem) =>
-				cartItem.sku === sku
-					? { ...cartItem, quantity: newQuantity }
-					: cartItem
-			);
 			if (newQuantity === 0) {
-				newCart = newCart.filter((cartItem) => cartItem.sku !== sku);
+				return oldCart.filter((cartItem) => cartItem.sku !== sku);
+			} else {
+				return oldCart.map((cartItem) =>
+					cartItem.sku === sku
+						? { ...cartItem, quantity: newQuantity }
+						: cartItem
+				);
 			}
-			return newCart;
 		});
 	}
 
