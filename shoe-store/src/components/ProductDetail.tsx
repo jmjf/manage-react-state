@@ -53,6 +53,7 @@ export function ProductDetail() {
 			<p>
 				<button
 					className="btn btn-primary"
+					disabled={selectedSku.length === 0}
 					onClick={onAddToCart}
 				>
 					Add to cart

@@ -20,3 +20,13 @@ Customer wants to select shoe size to add to the cart so they can get the right 
 Part of me wants to make the select a common component, but they're different enough that doesn't seem worth it.
 
 **COMMIT: 4.0.1 - FEAT: add size select on ProductDetail**
+
+## Disable add to cart if no size selected
+
+Customer can't add to cart if they haven't selected a size.
+
+-  Button -> disabled = true if `selectedSku` is empty string (basically same as how Angular or Vue would do it)
+   -  I put the calculation on the element because it's simple
+-  And that's what he does, though he writes `!selectedSku` where I checked length
+
+**COMMIT 4.0.2 - FEAT: disable add to cart button if no sku selected**
