@@ -10,6 +10,7 @@ import { Cart } from 'components/Cart';
 import { ICartItem } from 'models/CartItem';
 
 import './App.css';
+import { Checkout } from 'components/Checkout';
 
 const LOCAL_STORAGE_KEYS = {
 	CART_ITEMS: 'cartItems',
@@ -105,6 +106,10 @@ export default function App() {
 									updateQuantity={updateQuantity}
 								/>
 							}
+						/>
+						<Route
+							path="/checkout"
+							element={<Checkout />}
 						/>
 					</Routes>
 				</main>
