@@ -14,11 +14,30 @@ export function Cart({ cartItems, updateQuantity }: ICartProps) {
 	const { data, isLoading, error } = useFetchAll<IProduct>(urls);
 	const products = arrayify<IProduct>(data);
 
+	const { quantity: cartItemCount } = cartItems.reduce(
+		(acc, curr) => {
+			acc.quantity += curr.quantity;
+			return acc;
+		},
+		{ quantity: 0 } as unknown as ICartItem
+	);
+
+	function cartTotalAmount() {
+		let totalAmount = 0.0;
+		for (let cartItem of cartItems) {
+			const { price } = getProductForId(cartItem.id);
+			totalAmount += price * cartItem.quantity;
+		}
+		return Math.round(totalAmount * 100) / 100;
+	}
+
+	function getProductForId(id: number): IProduct {
+		return products.find((product) => product.id === id) as IProduct;
+	}
+
 	function renderItem(cartItem: ICartItem) {
 		const { id, sku, quantity } = cartItem;
-		const { name, price, image, skus } = products.find(
-			(product) => product.id === id
-		) as IProduct;
+		const { name, price, image, skus } = getProductForId(id);
 
 		const { size } = skus.find((skuItem) => skuItem.sku === sku) as ISku;
 
@@ -64,6 +83,13 @@ export function Cart({ cartItems, updateQuantity }: ICartProps) {
 	return (
 		<section id="cart">
 			<h1>Cart</h1>
+			<h2>
+				{cartItemCount
+					? `${cartItemCount} items in the cart -- Total cost $${cartTotalAmount().toFixed(
+							2
+					  )}`
+					: 'Cart is empty'}
+			</h2>{' '}
 			<ul>{cartItems.map(renderItem)}</ul>
 		</section>
 	);

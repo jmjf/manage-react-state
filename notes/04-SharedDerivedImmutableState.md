@@ -122,6 +122,8 @@ Now to get size from the sku
 
 **COMMIT: 4.0.6 - FEAT: show size for cart items**
 
+## Quantity changes and deletes
+
 Watch video until he gets to updating the ordered quantity
 
 -  For update qty, he's passing a function prop because cart state is in the `App` function; will need to build there
@@ -151,3 +153,18 @@ Okay, nothing exciting. He used a ternary in `updateQuantity` where I chose an `
 Next step will be to show total number of items in the header (deriving state).
 
 **COMMIT: 4.0.9 - DOCS: catch up video to where I am; get ready for next feature**
+
+## Cart header
+
+What would I put in the Cart header?
+
+-  Really not much, I'd have an order total box that shows item count, cost, shipping
+-  But we don't have that here, or maybe it's coming in the future
+-  For now, I'll show number of items and total cost
+   -  Count items by summing cart items' quantities (sounds like a job for `reduce`)
+   -  Total cost by summing cart items' price \* quantity (another `reduce`)
+   -  Except reduce wants to use an `ICartItem`, so I'll use a fake `ICartItem` to do the totaling
+   -  Calculating price requires looking up the item in the `products` array every time, but I'll do it because it makes sense
+   -  That's working except the currency format needs some help; `toFixed(2)` solves it
+
+**COMMIT: 4.0.10 - FEAT: add item count and total cost to the cart header**
