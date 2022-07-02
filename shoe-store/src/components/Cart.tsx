@@ -84,11 +84,11 @@ export function Cart({ cartItems, updateQuantity }: ICartProps) {
 		<section id="cart">
 			<h1>Cart</h1>
 			<h2>
-				{cartItemCount
-					? `${cartItemCount} items in the cart -- Total cost $${cartTotalAmount().toFixed(
-							2
-					  )}`
-					: 'Cart is empty'}
+				{cartItemCount === 0
+					? 'Cart is empty'
+					: `${cartItemCount} item${
+							cartItemCount > 1 ? 's' : ''
+					  } in the cart -- Total cost $${cartTotalAmount().toFixed(2)}`}
 			</h2>{' '}
 			<ul>{cartItems.map(renderItem)}</ul>
 		</section>

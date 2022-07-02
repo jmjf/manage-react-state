@@ -168,3 +168,11 @@ What would I put in the Cart header?
    -  That's working except the currency format needs some help; `toFixed(2)` solves it
 
 **COMMIT: 4.0.10 - FEAT: add item count and total cost to the cart header**
+
+Now, let's see what he does.
+
+-  He uses reduce, but isn't using TS, so doesn't have to deal with TS wanting `ICartItem` (his accumulator is a bare number)
+-  He also handles singluar/plural (added--ternary in `${}` to display s or not)
+-  He mentions `useMemo` if performance is a concern
+
+**COMMIT: 4.0.11 - FEAT: improve cart header display based on video**
