@@ -1,3 +1,4 @@
+import { ICartItem } from 'models/CartItem';
 import { BaseSyntheticEvent, useState } from 'react';
 
 // I want to filter the list of states by country
@@ -42,7 +43,11 @@ const emptyAddress: IAddress = {
 	countryCode: '',
 };
 
-export function Checkout() {
+interface ICheckoutProps {
+	cartItems: ICartItem[];
+}
+
+export function Checkout({ cartItems }: ICheckoutProps) {
 	const [address, setAddress] = useState(emptyAddress);
 
 	function handleChange(e: BaseSyntheticEvent) {
@@ -68,62 +73,127 @@ export function Checkout() {
 
 	return (
 		<>
-			<div>
-				<label htmlFor="countryCode">Country</label>
-				<br />
-				<select
-					id="countryCode"
-					value={address.countryCode}
-					onBlur={handleBlur}
-					onChange={handleChange}
-				>
-					<option
-						key=""
-						value=""
+			<h1>Shipping Information</h1>
+			<form onSubmit={handleSubmit}>
+				<div>
+					<label htmlFor="shipToName">Ship To</label>
+					<br />
+					<input
+						id="shipToName"
+						type="text"
+						value={address.shipToName}
+						onBlur={handleBlur}
+						onChange={handleChange}
+					/>
+				</div>
+				<div>
+					<label htmlFor="addressLine1Text">Address Line 1</label>
+					<br />
+					<input
+						id="addressLine1Text"
+						type="text"
+						value={address.addressLine1Text}
+						onBlur={handleBlur}
+						onChange={handleChange}
+					/>
+				</div>
+				<div>
+					<label htmlFor="addressLine2Text">Address Line 2</label>
+					<br />
+					<input
+						id="addressLine2Text"
+						type="text"
+						value={address.addressLine2Text}
+						onBlur={handleBlur}
+						onChange={handleChange}
+					/>
+				</div>
+				<div>
+					<label htmlFor="cityName">City</label>
+					<br />
+					<input
+						id="cityName"
+						type="text"
+						value={address.cityName}
+						onBlur={handleBlur}
+						onChange={handleChange}
+					/>
+				</div>
+				<div>
+					<label htmlFor="postalCode">Postal/ZIP code</label>
+					<br />
+					<input
+						id="postalCode"
+						type="text"
+						value={address.postalCode}
+						onBlur={handleBlur}
+						onChange={handleChange}
+					/>
+				</div>
+				<div>
+					<label htmlFor="countryCode">Country</label>
+					<br />
+					<select
+						id="countryCode"
+						value={address.countryCode}
+						onBlur={handleBlur}
+						onChange={handleChange}
 					>
-						Select Country
-					</option>
-					{countries.map((country) => (
 						<option
-							key={country.countryCode}
-							value={country.countryCode}
+							key=""
+							value=""
 						>
-							{country.countryName}
+							Select Country
 						</option>
-					))}
-				</select>
-			</div>
-			<div>
-				<label htmlFor="stateCode">State/Province</label>
-				<br />
-				<select
-					id="stateCode"
-					value={address.stateCode}
-					onBlur={handleBlur}
-					onChange={handleChange}
-					disabled={address.countryCode === ''}
-				>
-					<option
-						key=""
-						value=""
-					>
-						Select State/Province
-					</option>
-					{countryStates
-						.filter(
-							(countryState) =>
-								countryState.countryCode === address.countryCode
-						)
-						.map((countryState) => (
+						{countries.map((country) => (
 							<option
-								key={countryState.stateCode}
-								value={countryState.stateCode}
+								key={country.countryCode}
+								value={country.countryCode}
 							>
-								{countryState.stateName}
+								{country.countryName}
 							</option>
 						))}
-				</select>
-			</div>{' '}
+					</select>
+				</div>
+				<div>
+					<label htmlFor="stateCode">State/Province</label>
+					<br />
+					<select
+						id="stateCode"
+						value={address.stateCode}
+						onBlur={handleBlur}
+						onChange={handleChange}
+						disabled={address.countryCode === ''}
+					>
+						<option
+							key=""
+							value=""
+						>
+							Select State/Province
+						</option>
+						{countryStates
+							.filter(
+								(countryState) =>
+									countryState.countryCode === address.countryCode
+							)
+							.map((countryState) => (
+								<option
+									key={countryState.stateCode}
+									value={countryState.stateCode}
+								>
+									{countryState.stateName}
+								</option>
+							))}
+					</select>
+				</div>
+				<div>
+					<input
+						type="submit"
+						className="btn btn-primary"
+						value="Save shipping info"
+					/>
+				</div>
+			</form>
 		</>
 	);
 }

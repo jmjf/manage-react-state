@@ -42,6 +42,24 @@ Let's get them working first. (Real world, I'd probably give some of these contr
    -  If the changed value is country, reset state too
       -  I can use `target.id` and check for `countryCode`
 
-It works
+It works.
 
 **COMMIT: 5.0.2 - FEAT: add country and state selects; state depends on country**
+
+Add the rest of the address fields. It isn't pretty, but it works.
+
+Let's roll video and see where he goes.
+
+Things I've already done:
+
+-  Add route to `Checkout` in `App`
+
+Changes:
+
+-  He has the whole thing wrapped in a `<form>`, which doesn't surprise me.
+-  Add the submit button
+-  `Checkout` needs a `cartItems` prop
+-  Add a "checkout" button on `Cart` (`useNavigate` to get a navigate hook, on click, navigate to checkout)
+-  Only render button if `cartItemCount` > 0 (he uses `cartItems.length`, not sure if there's a real difference)
+
+**COMMIT: 5.0.3 - FEAT: add remaining fields to form; catch up to video**

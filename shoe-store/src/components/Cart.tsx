@@ -1,6 +1,7 @@
 import { useFetchAll } from 'hooks/useFetchAll';
 import { ICartItem } from 'models/CartItem';
 import { IProduct, ISku } from 'models/Product';
+import { useNavigate } from 'react-router';
 import { arrayify } from 'utils';
 import Spinner from './Spinner';
 
@@ -13,6 +14,7 @@ export function Cart({ cartItems, updateQuantity }: ICartProps) {
 	const urls = cartItems.map((cartItem) => `products/${cartItem.id}`);
 	const { data, isLoading, error } = useFetchAll<IProduct>(urls);
 	const products = arrayify<IProduct>(data);
+	const navigate = useNavigate();
 
 	const { quantity: cartItemCount } = cartItems.reduce(
 		(acc, curr) => {
@@ -91,6 +93,14 @@ export function Cart({ cartItems, updateQuantity }: ICartProps) {
 					  } in the cart -- Total cost $${cartTotalAmount().toFixed(2)}`}
 			</h2>{' '}
 			<ul>{cartItems.map(renderItem)}</ul>
+			{cartItemCount > 0 ? (
+				<button
+					className="btn btn-primary"
+					onClick={(e) => navigate('/checkout')}
+				>
+					Checkout
+				</button>
+			) : null}
 		</section>
 	);
 }

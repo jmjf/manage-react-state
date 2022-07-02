@@ -109,7 +109,7 @@ export default function App() {
 						/>
 						<Route
 							path="/checkout"
-							element={<Checkout />}
+							element={<Checkout cartItems={cartItems} />}
 						/>
 					</Routes>
 				</main>
