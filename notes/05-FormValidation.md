@@ -63,3 +63,17 @@ Changes:
 -  Only render button if `cartItemCount` > 0 (he uses `cartItems.length`, not sure if there's a real difference)
 
 **COMMIT: 5.0.3 - FEAT: add remaining fields to form; catch up to video**
+
+## handleChange
+
+He notes that managing the state in an object is a bit more complex.
+
+-  Matching ids to state attribute names makes life easier
+-  Hmm... he's using `{ ...oldAddress, [e.target.id]: e.target.value }`
+   -  That works (and without a dictionary type def on the object), so `handleChange` just got a little simpler
+   -  Still need to reset `stateCode` if `countryCode` changes, so more complex than his super-simple form, but simpler
+-  He also has an issue with event being reset before it's used in the handler, but I'm not seeing that
+   -  He uses `e.persist()` to persist the event; I'm using `e.preventDefault`
+   -  [React docs](https://reactjs.org/docs/events.html) say that, as of v17, `SyntheticEvent` is no longer pooled, so `e.persist()` doesn't do anything -- LOL, then he says that, well, helps to find it myself
+
+**COMMIT: 5.0.4 - REFACTOR: use indexed propery in handleChange to simplify slightly (TIL)**

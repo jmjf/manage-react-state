@@ -54,15 +54,12 @@ export function Checkout({ cartItems }: ICheckoutProps) {
 		e.preventDefault();
 
 		setAddress((oldAddress) => {
-			const newAddress: { [key: string]: any } = { ...oldAddress };
+			const newAddress = { ...oldAddress, [e.target.id]: e.target.value };
 			if (e.target.id === 'countryCode') {
 				newAddress.stateCode = '';
 			}
-			newAddress[e.target.id] = e.target.value;
 			return newAddress as IAddress;
 		});
-		console.log(e);
-		//TODO
 	}
 	function handleBlur(e: any) {
 		//TODO
