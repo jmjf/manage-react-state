@@ -232,3 +232,11 @@ Close browser; reopen; navigate to URL; cart is still there
 It works.
 
 **COMMIT: 4.0.12 - FEAT: store cart data in localStorage so it persists across browser sessions**
+
+Now he brings up, "What if the data is bad?" and does `try/catch`, handles the "no data" case, etc., which I've already done.
+
+Also demonstrates state changes looking a localStorage in DevTools.
+
+Some libraries offer localStorage hooks (I guess a "db library" over localStorage).
+
+**COMMIT: 4.0.13 - DOCS: catch up video, unit summary**
