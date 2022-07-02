@@ -176,3 +176,59 @@ Now, let's see what he does.
 -  He mentions `useMemo` if performance is a concern
 
 **COMMIT: 4.0.11 - FEAT: improve cart header display based on video**
+
+## Lazy initialization and persist data between reloads (localStorage)
+
+Options to store cart so it isn't lost on reloads
+
+-  Cookies
+-  localStorage - data saved across sessions; based on origin (host); keys and values are strings
+-  sessionStorage - basically localStorage limited to one session (one browser tab)
+-  IndexedDb - more powerful, more complex; objectStore, indexes, transactions, cursors, etc.
+-  Cache storage - per MDN, experimental; API seems somewhere between localStorage and IndexedDb
+
+Factors to consider
+
+-  Complexity of using
+-  Does local, fast, offline meet needs
+-  Capacity (limited)
+-  Security (data stored in browser, shared machines) -- avoid sensitive data
+-  Sync APIs (localStorage, sessionStorage) -- data set size can be a performance issue
+-  Single browser (lose data if only stored locally)
+
+localStorage API overview
+
+-  `setItem(key, value)`
+-  `getItem(key)`
+-  `removeItem(key)`
+-  [MDN](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+
+-  `useEffect` in `App`
+   -  Store JSON string of cart items
+   -  Set dependency on `cartItems`
+   -  So, effect will store the cart items in localStorage whenever they change
+
+Great. Now we need to get the data when we need it. `cartItems` is setup in `App`, so I'm guessing we'll need to get it and set the state there.
+
+-  First, he does this in the `useState` with a direct `JSON.parse()` of the local storage
+   -  First issue I see, what happens if `JSON.parse()` fails? (throw)
+   -  He notes that the value will be evaluated every render, which can be expensive and a performance hit
+      -  Solution to this, pass a function to `useState`, only run on first render (lazy evaluatino)
+      -  That works because, after first render, state is maintained in the app
+
+How would I do that?
+
+-  Write a function, `initializeCart`
+-  Get data from localStorage
+-  If not found, return `[]`
+-  Attempt to `JSON.parse()`
+   -  On success, return the result (really should test it's an array)
+   -  On catch, log an error and return `[]`
+-  He uses a simple anonymous function (demo app)
+
+Reload (empty cart); add item to cart; close tab; navigate to URL; cart is still there
+Close browser; reopen; navigate to URL; cart is still there
+
+It works.
+
+**COMMIT: 4.0.12 - FEAT: store cart data in localStorage so it persists across browser sessions**

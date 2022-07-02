@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router';
 
 import Footer from 'components/Footer';
@@ -11,8 +11,39 @@ import { ICartItem } from 'models/CartItem';
 
 import './App.css';
 
+const LOCAL_STORAGE_KEYS = {
+	CART_ITEMS: 'cartItems',
+	// because this isn't expensive and we could end up with more
+};
+
 export default function App() {
-	const [cartItems, setCartItems] = useState([] as ICartItem[]);
+	const [cartItems, setCartItems] = useState(initializeCartItems);
+
+	useEffect(() => {
+		localStorage.setItem(
+			LOCAL_STORAGE_KEYS.CART_ITEMS,
+			JSON.stringify(cartItems)
+		);
+	}, [cartItems]);
+
+	function initializeCartItems(): ICartItem[] {
+		const getItemResult = localStorage.getItem(LOCAL_STORAGE_KEYS.CART_ITEMS);
+		if (
+			getItemResult === null ||
+			getItemResult === undefined ||
+			getItemResult === ''
+		)
+			return [];
+
+		try {
+			const cartItems = JSON.parse(getItemResult);
+			if (!Array.isArray(cartItems)) return [];
+			return cartItems;
+		} catch (e) {
+			console.log('ERROR: failed reading cart data; returning empty cart');
+			return [];
+		}
+	}
 
 	function addToCart(id: number, sku: string): void {
 		setCartItems((oldCart) => {
