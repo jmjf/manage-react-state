@@ -77,3 +77,52 @@ He notes that managing the state in an object is a bit more complex.
    -  [React docs](https://reactjs.org/docs/events.html) say that, as of v17, `SyntheticEvent` is no longer pooled, so `e.persist()` doesn't do anything -- LOL, then he says that, well, helps to find it myself
 
 **COMMIT: 5.0.4 - REFACTOR: use indexed propery in handleChange to simplify slightly (TIL)**
+
+## Form validation
+
+Decisions we need to make
+
+-  Error display location (beside, above, below)
+-  Error display timing (on submit, change, blur)
+-  Submit enable/disabled (never, only when valid, other)
+-  When to revalidate (on submit, change, blur)
+
+My preference is validate/revalidate on blur/change, ensure submit can't happen (disable or block) if form is invalid
+
+-  Identifies issues as they happen
+-  Promotes tagging errors to fields
+-  Reduces surprises later
+-  Submit should check form is valid--ideally with an aggregate error flag (OR all field error flags)
+   -  Disable or not depends on factors; for example, may have accessibility implications
+   -  Should not attempt to submit (backend call) if form is invalid
+
+His direction
+
+-  Error summary at top on submit
+-  Validate on blur - display error message if invalid
+-  Disable submit when submitting (to prevent duplicate submits), but don't disable if form invalid
+-  (Re)Validate on change
+
+What state do we need?
+
+-  All fields need an error state that controls error display
+-  I'd like a derived OR of field errors to make submit easier
+-  Only show errors if the field is touched (so need touched for each field)
+   -  Submit counts as touching (focus)
+-  Only show summary at top if form has been submitted
+-  Is submit in progress (so we can disable submit)
+-  Has the form changed (alert if nav away from partial form)
+
+He has a plan for how he's going to manage all this, so probably more video watching ahead to understand where he's going.
+
+-  `touchedFields`: he calls it `touched`, but the way he describes it, I'm guessing it's an array
+-  `status`: will have values `NotSubmitted`, `Submitting`, `Submitted`, I expect
+-  derive if the form is value, any errors, and if it has changed
+
+"State enum pattern" -> instead of tracking separate boolean flags for mutually exclusive status-like values, store status using an "enum" (`const` object with keys that correspond to status values) -- like I did in `App` with localStorage keys
+
+-  Define state enum on `Checkout` (not submitted, is submitting, failed submit, successful submit)
+-  In `handleSubmit`, set to is submitting on entry, failed submitted on error, successful submit on success
+-  And submit button should disable if in is submitting status
+
+**COMMIT: 5.0.5 - FEAT: disable submit button if the form is in the process of submitting**

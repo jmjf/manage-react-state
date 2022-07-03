@@ -24,6 +24,7 @@ export function useFetchAll<DataType>(
 				setError(e);
 			})
 			.finally(() => setIsLoading(false));
+		// eslint-disable-next-line
 	}, []);
 
 	return { data, isLoading, error };

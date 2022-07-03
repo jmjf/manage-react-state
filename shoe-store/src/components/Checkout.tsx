@@ -1,5 +1,6 @@
-import { ICartItem } from 'models/CartItem';
 import { BaseSyntheticEvent, useState } from 'react';
+
+import { ICartItem } from 'models/CartItem';
 
 // I want to filter the list of states by country
 const countryStates = [
@@ -43,19 +44,29 @@ const emptyAddress: IAddress = {
 	countryCode: '',
 };
 
+const CHECKOUT_STATUS = {
+	NOT_SUBMITTED: 'NOT_SUBMITTED',
+	IS_SUBMITTING: 'IS_SUBMITTING',
+	FAILED_SUBMIT: 'FAILED_SUBMITTED',
+	SUCCESSFUL_SUBMIT: 'SUCCESSFUL_SUBMIT',
+};
+
 interface ICheckoutProps {
 	cartItems: ICartItem[];
 }
 
 export function Checkout({ cartItems }: ICheckoutProps) {
 	const [address, setAddress] = useState(emptyAddress);
+	const [checkoutStatus, setCheckoutStatus] = useState(
+		CHECKOUT_STATUS.NOT_SUBMITTED
+	);
 
-	function handleChange(e: BaseSyntheticEvent) {
-		e.preventDefault();
+	function handleChange(ev: BaseSyntheticEvent) {
+		ev.preventDefault();
 
 		setAddress((oldAddress) => {
-			const newAddress = { ...oldAddress, [e.target.id]: e.target.value };
-			if (e.target.id === 'countryCode') {
+			const newAddress = { ...oldAddress, [ev.target.id]: ev.target.value };
+			if (ev.target.id === 'countryCode') {
 				newAddress.stateCode = '';
 			}
 			return newAddress as IAddress;
@@ -64,8 +75,11 @@ export function Checkout({ cartItems }: ICheckoutProps) {
 	function handleBlur(e: any) {
 		//TODO
 	}
-	function handleSubmit(e: any) {
-		//TODO
+	function handleSubmit(ev: any) {
+		ev.preventDefault();
+		setCheckoutStatus(CHECKOUT_STATUS.IS_SUBMITTING);
+		// if submitted but failed setCheckoutStatus(CHECKOUT_STATUS.FAILED_SUBMIT);
+		// if submitted ok setCheckoutStatus(CHECKOUT_STATUS.SUCCESSFUL_SUBMIT);
 	}
 
 	return (
@@ -188,6 +202,7 @@ export function Checkout({ cartItems }: ICheckoutProps) {
 						type="submit"
 						className="btn btn-primary"
 						value="Save shipping info"
+						disabled={checkoutStatus === CHECKOUT_STATUS.IS_SUBMITTING}
 					/>
 				</div>
 			</form>

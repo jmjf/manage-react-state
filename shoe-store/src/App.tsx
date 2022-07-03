@@ -12,9 +12,11 @@ import { ICartItem } from 'models/CartItem';
 import './App.css';
 import { Checkout } from 'components/Checkout';
 
+// overkill for a single value, maybe
+// it's used in more than one place, so this makes it easier to adjust
+// if we end up with more keys, it's a wise move
 const LOCAL_STORAGE_KEYS = {
 	CART_ITEMS: 'cartItems',
-	// because this isn't expensive and we could end up with more
 };
 
 export default function App() {
