@@ -152,3 +152,51 @@ Everything seems to work
 Reset db.json
 
 **COMMIT: 5.0.6 - FEAT: when submit is clicked, save data entered in the checkout form**
+
+### State enums vs. finite state machines
+
+If logic has discrete states, consider using a single status variable.
+
+Finite state machines are in only one state at a time; transition from state to state. State enum is a simple alternative.
+
+-  Consider libraries (xstate, others)
+   -  Can define and enforce valid state transitions
+   -  Can produce visual state charts
+
+In many cases, state enums are adequate.
+
+## Form validation
+
+He's using a function to identify errors in the address. Looks at the whole address. I think it makes sense to return an "address" with error messages for each attribute--easy to match against the form fields.
+
+What are my validation rules?
+
+-  shipToName: length > 0
+-  addressLine1Text: length > 0
+-  addressLine2Text:
+-  cityName: length > 0
+-  stateCode: found in `countryStates` for `countryCode`
+-  postalCode: length > 0
+-  countryCode: found in `countries`
+
+-  `getErrors()`
+-  add `getValidStatesForCountry()`, which filters the list of states by country
+   -  filter logic also used in the render for the states `<select>`, keep it in one place
+-  `console.log(getErrors(address))` for now to see if it works
+
+   -  It works
+
+-  He uses an address-like object for errors
+-  I constructs the result with `if` statements loading an empty object; will see if this matters
+-  He adds `errors` as computed state; added this
+-  Adds `isValid` too; added `isFormValid`
+
+-  If form isn't valid, `handleSubmit` sets `FAILED_SUBMIT` and returns
+
+-  At the top of the form, if form isn't valid and failed submit, show a list of errors
+
+It's working. I'm not happy with the complexity around the error summary. I suspect there's a better way, but I'll look at it later.
+
+**COMMIT: 5.0.7 - FEAT: display error summary at the top of the form after submit; don't try to save data if invalid**
+
+## Inline errors (tracking touched)

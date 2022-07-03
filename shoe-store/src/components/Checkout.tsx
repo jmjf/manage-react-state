@@ -5,6 +5,11 @@ import { saveShippingAddress } from 'services/shippingService';
 import { ICartItem } from 'models/CartItem';
 
 // I want to filter the list of states by country
+interface ICountryStates {
+	countryCode: string;
+	stateCode: string;
+	stateName: string;
+}
 const countryStates = [
 	{ countryCode: 'US', stateCode: 'CA', stateName: 'California' },
 	{ countryCode: 'US', stateCode: 'FL', stateName: 'Florida' },
@@ -65,6 +70,10 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 	);
 	const [saveError, setSaveError] = useState(null as unknown as Error);
 
+	// derived state
+	const errors = getErrors(address);
+	const isFormValid = Object.keys(errors).length === 0;
+
 	function handleChange(ev: BaseSyntheticEvent) {
 		ev.preventDefault();
 
@@ -82,7 +91,10 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 	async function handleSubmit(ev: any) {
 		ev.preventDefault();
 		setCheckoutStatus(CHECKOUT_STATUS.IS_SUBMITTING);
-		debugger;
+		if (!isFormValid) {
+			setCheckoutStatus(CHECKOUT_STATUS.FAILED_SUBMIT);
+			return;
+		}
 		try {
 			const saveResult = await saveShippingAddress(address);
 			console.log('saveResult', saveResult);
@@ -99,6 +111,41 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 		}
 	}
 
+	function getValidStatesForCountry(): ICountryStates[] {
+		return (
+			countryStates.filter(
+				(countryState) => countryState.countryCode === address.countryCode
+			) ?? ([] as unknown as ICountryStates[])
+		);
+	}
+
+	function getErrors(address: IAddress): IAddress {
+		return {
+			shipToName:
+				address.shipToName.length > 0 ? '' : 'Ship to name is required',
+			addressLine1Text:
+				address.addressLine1Text.length > 0
+					? ''
+					: 'Address line 1 is required',
+			addressLine2Text: '',
+			cityName: address.cityName.length > 0 ? '' : 'City name is required',
+			stateCode: getValidStatesForCountry().find(
+				(state) => address.stateCode === state.stateCode
+			)
+				? ''
+				: 'State code is required',
+			postalCode:
+				address.postalCode.length > 0 ? '' : 'Postal/ZIP code is required',
+			countryCode: countries.find(
+				(country) => address.countryCode === country.countryCode
+			)
+				? ''
+				: 'Country code is required',
+		};
+	}
+
+	console.log(errors);
+
 	if (saveError) throw saveError;
 	if (checkoutStatus === CHECKOUT_STATUS.SUCCESSFUL_SUBMIT) {
 		return <h1>Order submitted</h1>;
@@ -107,6 +154,21 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 	return (
 		<>
 			<h1>Shipping Information</h1>
+			{!isFormValid && checkoutStatus === CHECKOUT_STATUS.FAILED_SUBMIT && (
+				<div role="alert">
+					<p>Please fix these errors:</p>
+					<ul>
+						{Object.keys(errors).map((key) => {
+							const errs = errors as unknown as {
+								[key: string]: string;
+							};
+							return errs[key].length > 0 ? (
+								<li key={key}>{errs[key]}</li>
+							) : null;
+						})}
+					</ul>
+				</div>
+			)}
 			<form onSubmit={handleSubmit}>
 				<div>
 					<label htmlFor="shipToName">Ship To</label>
@@ -204,19 +266,14 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 						>
 							Select State/Province
 						</option>
-						{countryStates
-							.filter(
-								(countryState) =>
-									countryState.countryCode === address.countryCode
-							)
-							.map((countryState) => (
-								<option
-									key={countryState.stateCode}
-									value={countryState.stateCode}
-								>
-									{countryState.stateName}
-								</option>
-							))}
+						{getValidStatesForCountry().map((countryState) => (
+							<option
+								key={countryState.stateCode}
+								value={countryState.stateCode}
+							>
+								{countryState.stateName}
+							</option>
+						))}
 					</select>
 				</div>
 				<div>
