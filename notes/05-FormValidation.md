@@ -126,3 +126,29 @@ He has a plan for how he's going to manage all this, so probably more video watc
 -  And submit button should disable if in is submitting status
 
 **COMMIT: 5.0.5 - FEAT: disable submit button if the form is in the process of submitting**
+
+## Save shipping data
+
+He provides a function that uses `fetch` to call json-server and save the address -- `saveShippingAddress`.
+
+-  TS-ified it
+-  I expect we're going to call this in `handleSubmit`
+   -  `handleSubmit` needs to be `async`
+   -  He wants a save error to catch any errors and throw if it's set
+   -  He wants to empty the cart on success; I'll write `emptyCartItems` and pass as a prop
+      -  He does the same -- clear names, tell you what it does, makes code easier to understand, limits child ability to change data (least privilege)
+   -  If the submit succeeds, he wants to return a message
+
+Everything seems to work
+
+-  Form entry, including states for country
+-  I see the submit button briefly disable while the form is submitting
+-  After submit, it shows the message and the cart is empty
+-  Can I induce an HTTP error?
+   -  `status` is read-only, so I can't set it in the debugger to force an error
+   -  If I don't run json-server I get a connection refused
+   -  Not seeing an easy way to test the HTTP error case (which he isn't really doing yet either)
+
+Reset db.json
+
+**COMMIT: 5.0.6 - FEAT: when submit is clicked, save data entered in the checkout form**

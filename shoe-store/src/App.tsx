@@ -77,6 +77,10 @@ export default function App() {
 		});
 	}
 
+	function emptyCartItems(): void {
+		setCartItems([] as ICartItem[]);
+	}
+
 	return (
 		<>
 			<div className="content">
@@ -111,7 +115,12 @@ export default function App() {
 						/>
 						<Route
 							path="/checkout"
-							element={<Checkout cartItems={cartItems} />}
+							element={
+								<Checkout
+									cartItems={cartItems}
+									emptyCartItems={emptyCartItems}
+								/>
+							}
 						/>
 					</Routes>
 				</main>

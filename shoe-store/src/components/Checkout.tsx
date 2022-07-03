@@ -1,5 +1,7 @@
 import { BaseSyntheticEvent, useState } from 'react';
 
+import { saveShippingAddress } from 'services/shippingService';
+
 import { ICartItem } from 'models/CartItem';
 
 // I want to filter the list of states by country
@@ -24,7 +26,7 @@ const countries = [
 	{ countryCode: 'CA', countryName: 'Canada' },
 	{ countryCode: 'JP', countryName: 'Japan' },
 ];
-interface IAddress {
+export interface IAddress {
 	shipToName: string;
 	addressLine1Text: string;
 	addressLine2Text: string;
@@ -53,13 +55,15 @@ const CHECKOUT_STATUS = {
 
 interface ICheckoutProps {
 	cartItems: ICartItem[];
+	emptyCartItems: () => void;
 }
 
-export function Checkout({ cartItems }: ICheckoutProps) {
+export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 	const [address, setAddress] = useState(emptyAddress);
 	const [checkoutStatus, setCheckoutStatus] = useState(
 		CHECKOUT_STATUS.NOT_SUBMITTED
 	);
+	const [saveError, setSaveError] = useState(null as unknown as Error);
 
 	function handleChange(ev: BaseSyntheticEvent) {
 		ev.preventDefault();
@@ -75,11 +79,29 @@ export function Checkout({ cartItems }: ICheckoutProps) {
 	function handleBlur(e: any) {
 		//TODO
 	}
-	function handleSubmit(ev: any) {
+	async function handleSubmit(ev: any) {
 		ev.preventDefault();
 		setCheckoutStatus(CHECKOUT_STATUS.IS_SUBMITTING);
-		// if submitted but failed setCheckoutStatus(CHECKOUT_STATUS.FAILED_SUBMIT);
-		// if submitted ok setCheckoutStatus(CHECKOUT_STATUS.SUCCESSFUL_SUBMIT);
+		debugger;
+		try {
+			const saveResult = await saveShippingAddress(address);
+			console.log('saveResult', saveResult);
+			if (saveResult.ok) {
+				setCheckoutStatus(CHECKOUT_STATUS.SUCCESSFUL_SUBMIT);
+				emptyCartItems();
+			} else {
+				setCheckoutStatus(CHECKOUT_STATUS.FAILED_SUBMIT);
+			}
+		} catch (err) {
+			console.log('saveError', err);
+			setSaveError(err as Error);
+			// will throw an error, so don't need to set status
+		}
+	}
+
+	if (saveError) throw saveError;
+	if (checkoutStatus === CHECKOUT_STATUS.SUCCESSFUL_SUBMIT) {
+		return <h1>Order submitted</h1>;
 	}
 
 	return (
