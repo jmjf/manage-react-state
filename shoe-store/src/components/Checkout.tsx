@@ -72,7 +72,9 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 
 	// derived state
 	const errors = getErrors(address);
-	const isFormValid = Object.keys(errors).length === 0;
+	const isFormValid = Object.values(errors).every(
+		(error) => error.length === 0
+	);
 
 	function handleChange(ev: BaseSyntheticEvent) {
 		ev.preventDefault();

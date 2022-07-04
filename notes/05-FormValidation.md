@@ -216,3 +216,14 @@ Looking at it later, my main concern with `Checkout` is that it looks large (>25
    -  Maybe revisit this later?
 
 **COMMIT: 5.0.8 - REFACTOR: simplify error list with Object.entries().map([key, value] => {})**
+
+Problem: error list header never disappears
+
+-  `isFormValid` counts keys in the error object, but it needs to consider if the values are not empty instead
+-  Use `Object.values(errors).every(error => error.length === 0)` instead
+
+**COMMIT: 5.0.9 - FIX: error list never disappears because isFormValid checks Object.keys; use Object.values().every() instead**
+
+Let's move ahead for now. The error list improvement is real and makes me feel better about this code.
+
+## Inline errors (tracking touched)
