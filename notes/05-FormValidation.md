@@ -227,3 +227,27 @@ Problem: error list header never disappears
 Let's move ahead for now. The error list improvement is real and makes me feel better about this code.
 
 ## Inline errors (tracking touched)
+
+Need to track which fields have been touched so we know if we should display validation errors next to them. I have a feeling this will make the JSX even bigger with conditional error display next to the fields.
+
+-  I think this could be an object of booleans with field name keys
+-  All start out false, get set true on blur
+-  Does this need to be state? Or can it be treated as derived?
+   -  He makes it state
+
+First, let's get the location (country, state) interfaces and reference data out of `Checkout`
+
+**COMMIT: 5.0.10 - REFACTOR: move location data and interfaces to models/Location.ts; import in Checkout**
+
+Given an object in state, my approach is
+
+-  Build `emptyTouchedFields` to clone the keys in `emptyAddress` with all values `false`
+   -  Use `Object.keys` to get the keys, `map` to an array of `[key, false]`
+   -  Wrap that in `Object.fromEntries` to get an object
+-  Default `touchedFields` to `emptyTouchedFields`
+-  In `handleBlur`, update state setting key for the target's id true
+-  In JSX, if touched and it has a non-zero error length, show the error
+
+I have this working for `shipToName` as a POC. Let's commit it, then see where he goes.
+
+**COMMIT 5.0.11 - FEAT: add inline error for Ship to name field (and lay foundation to do the same for remaining fields)**

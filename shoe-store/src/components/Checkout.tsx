@@ -25,9 +25,14 @@ interface ICheckoutProps {
 	emptyCartItems: () => void;
 }
 
+const emptyTouchedFields = Object.fromEntries(
+	Object.keys(emptyAddress).map((key) => [key, false])
+);
+
 export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 	const [address, setAddress] = useState(emptyAddress);
 	const [saveError, setSaveError] = useState(null as unknown as Error);
+	const [touchedFields, setTouchedFields] = useState(emptyTouchedFields);
 	const [checkoutStatus, setCheckoutStatus] = useState(
 		CHECKOUT_STATUS.NOT_SUBMITTED
 	);
@@ -50,6 +55,9 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 		});
 	}
 	function handleBlur(e: any) {
+		setTouchedFields((oldTouchedFields) => {
+			return { ...oldTouchedFields, [e.target.id]: true };
+		});
 		//TODO
 	}
 	async function handleSubmit(ev: any) {
@@ -141,6 +149,9 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 						onBlur={handleBlur}
 						onChange={handleChange}
 					/>
+					{touchedFields.shipToName && errors.shipToName.length !== 0 ? (
+						<p className="alert">{errors.shipToName}</p>
+					) : null}
 				</div>
 				<div>
 					<label htmlFor="addressLine1Text">Address Line 1</label>
