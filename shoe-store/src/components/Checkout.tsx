@@ -158,12 +158,9 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 				<div role="alert">
 					<p>Please fix these errors:</p>
 					<ul>
-						{Object.keys(errors).map((key) => {
-							const errs = errors as unknown as {
-								[key: string]: string;
-							};
-							return errs[key].length > 0 ? (
-								<li key={key}>{errs[key]}</li>
+						{Object.entries(errors).map(([key, value]) => {
+							return value.length > 0 ? (
+								<li key={key}>{value}</li>
 							) : null;
 						})}
 					</ul>

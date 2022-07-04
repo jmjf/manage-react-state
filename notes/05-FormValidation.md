@@ -199,4 +199,20 @@ It's working. I'm not happy with the complexity around the error summary. I susp
 
 **COMMIT: 5.0.7 - FEAT: display error summary at the top of the form after submit; don't try to save data if invalid**
 
-## Inline errors (tracking touched)
+Looking at it later, my main concern with `Checkout` is that it looks large (>250 lines).
+
+-  About 60 lines is imports and reference data setup that should probably be imported
+-  About 100 lines is code supporting the JSX
+-  About 130 lines is the the JSX returned
+   -  There's a lot of logic built into that JSX that makes it not only longer by harder to reason about
+   -  Some of the logic is generating `<option>`s for `<select>`s; I'd need option generator functions to remove that
+-  The logic in the error list at the top isn't obvious; part of the complexity is TS casting errors as a dictionary so I can index by key
+   -  Figured out a better way to write it with `Object.entries().map(([key, value]) => {})`, which helps
+   -  I suspected there was a way this morning when I was working on it before breakfast, but coming back to it now, I saw it
+-  I think the country and state selects should be a separate component or components
+   -  As it is, I'd need updater functions for country and state, which adds more supporting function overhead
+      -  Lets me shrink the JSX, but adds to the overall code base size and probably doesn't make reasoning easier
+   -  If we were using context (still a couple of units away), it might be easier to separate the parts without excess prop drilling
+   -  Maybe revisit this later?
+
+**COMMIT: 5.0.8 - REFACTOR: simplify error list with Object.entries().map([key, value] => {})**
