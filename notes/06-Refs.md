@@ -101,4 +101,38 @@ I can't really test this because React 18 doesn't warn, but i can add `console.l
 
 **COMMIT: 6.0.3 - FEAT: ensure useFetch doesn't try to set state if the component unmounts while waiting for data**
 
-**COMMIT: 6.0.4 - CHORE: undo changes I don't want to keep route back to non-ref ProductDetail; set API delay back to 0; remove console.logs added to prove behavior**
+**COMMIT: 6.0.4 - CHORE: undo changes I don't want to keep**
+
+## Storing a previous value
+
+I suspect this will be similar to the previous case--create a ref and set it to previous value, then compare.
+
+We only want `useFetchAll`'s `useEffect` to run once, so have an empty dependency array, but we get a linter warning because it uses the `urls` parameter. Adding it causes a render race condition because `Cart` creates `urls` every time it renders, which runs the `useEffect`, which changes data, which cause a render, which creates `urls`, loop.
+
+So, I think this means either storing the previous value in `useEffect` or in `Cart`--probably the former. (yes)
+
+I can think of several strategies for comparing arrays by value
+
+-  `JSON.stringify`
+-  `every` to compare like-indexed elements
+-  `includes` comparing values from A to B (equal if they're the same length))
+-  In all cases, starting with a length comparison make sense because it can avoid costly comparisons when the arrays are obviously not equal (different lengths)
+
+He uses `every`
+
+-  He puts the comparison in a function outside the hook (doesn't need to be "React-ified"), but I'm putting it in `src/utils.ts`
+   -  He also notes putting it outside the `useEffect` means it isn't reallocated each render
+-  Given the comparion result, we can skip (return from) the `useEffect` if the arrays are equal or run if not
+   -  Remember to set `previousUrlsRef.current = [...urls]` after the check so we have it saved
+   -  And add `urls` to the dependency array (get rid of the linter error and the ignore line)
+
+Problem: empty cart; navigate to shoes; back to cart (on menu) gets a locked loading state because the `useEffect` doesn't run (I suspect)
+
+-  He says to set loading false if we return early -- that should do it
+-  Key point here being, the `useEffect` should treat any return as "no longer loading", unless the component is unmounted (didn't carry over that bit from the earlier example)
+
+It all works now.
+
+(This type of feature could be important for a mobile target where network latency could be large or data loads could be costly.)
+
+**COMMIT: 6.0.5 - FEAT: only load data in useFetchAll if the array of urls changes**
