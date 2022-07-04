@@ -11,6 +11,7 @@ import { ICartItem } from 'models/CartItem';
 
 import './App.css';
 import { Checkout } from 'components/Checkout';
+import { ProductDetailRefs } from 'components/ProductDetailRefs';
 
 // overkill for a single value, maybe
 // it's used in more than one place, so this makes it easier to adjust
@@ -98,7 +99,7 @@ export default function App() {
 						<Route
 							path="/:category/:id"
 							element={
-								<ProductDetail
+								<ProductDetailRefs
 									cartItems={cartItems}
 									addToCart={addToCart}
 								/>
