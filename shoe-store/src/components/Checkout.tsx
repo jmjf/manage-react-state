@@ -3,53 +3,15 @@ import { BaseSyntheticEvent, useState } from 'react';
 import { saveShippingAddress } from 'services/shippingService';
 
 import { ICartItem } from 'models/CartItem';
+import {
+	IAddress,
+	emptyAddress,
+	countries,
+	ICountryState,
+	countryStates,
+} from 'models/Location';
 
 // I want to filter the list of states by country
-interface ICountryStates {
-	countryCode: string;
-	stateCode: string;
-	stateName: string;
-}
-const countryStates = [
-	{ countryCode: 'US', stateCode: 'CA', stateName: 'California' },
-	{ countryCode: 'US', stateCode: 'FL', stateName: 'Florida' },
-	{ countryCode: 'US', stateCode: 'NC', stateName: 'North Carolina' },
-	{ countryCode: 'CA', stateCode: 'ON', stateName: 'Ontario' },
-	{
-		countryCode: 'CA',
-		stateCode: 'NL',
-		stateName: 'Newfoundland and Labrador',
-	},
-	{ countryCode: 'CA', stateCode: 'BC', stateName: 'British Columbia' },
-	{ countryCode: 'JP', stateCode: 'Aichi', stateName: 'Aichi' },
-	{ countryCode: 'JP', stateCode: 'Saitama', stateName: 'Saitama' },
-	{ countryCode: 'JP', stateCode: 'Aomori', stateName: 'Aomori' },
-];
-
-const countries = [
-	{ countryCode: 'US', countryName: 'United States' },
-	{ countryCode: 'CA', countryName: 'Canada' },
-	{ countryCode: 'JP', countryName: 'Japan' },
-];
-export interface IAddress {
-	shipToName: string;
-	addressLine1Text: string;
-	addressLine2Text: string;
-	cityName: string;
-	stateCode: string; // or any other second level division of a country
-	postalCode: string;
-	countryCode: string;
-}
-
-const emptyAddress: IAddress = {
-	shipToName: '',
-	addressLine1Text: '',
-	addressLine2Text: '',
-	cityName: '',
-	stateCode: '',
-	postalCode: '',
-	countryCode: '',
-};
 
 const CHECKOUT_STATUS = {
 	NOT_SUBMITTED: 'NOT_SUBMITTED',
@@ -65,10 +27,10 @@ interface ICheckoutProps {
 
 export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 	const [address, setAddress] = useState(emptyAddress);
+	const [saveError, setSaveError] = useState(null as unknown as Error);
 	const [checkoutStatus, setCheckoutStatus] = useState(
 		CHECKOUT_STATUS.NOT_SUBMITTED
 	);
-	const [saveError, setSaveError] = useState(null as unknown as Error);
 
 	// derived state
 	const errors = getErrors(address);
@@ -113,11 +75,11 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 		}
 	}
 
-	function getValidStatesForCountry(): ICountryStates[] {
+	function getValidStatesForCountry(): ICountryState[] {
 		return (
 			countryStates.filter(
 				(countryState) => countryState.countryCode === address.countryCode
-			) ?? ([] as unknown as ICountryStates[])
+			) ?? ([] as unknown as ICountryState[])
 		);
 	}
 
