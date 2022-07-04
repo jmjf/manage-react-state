@@ -15,7 +15,6 @@ export function useFetch<DataType>(url: string): IUseFetchResult<DataType> {
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		console.log('mounted');
 		isMountedRef.current = true;
 		async function loadData() {
 			setIsLoading(true);
@@ -25,7 +24,6 @@ export function useFetch<DataType>(url: string): IUseFetchResult<DataType> {
 				if (response.ok) {
 					const json = await response.json();
 					if (isMountedRef.current) {
-						console.log('setData');
 						setData(json);
 					}
 				} else {
@@ -35,13 +33,11 @@ export function useFetch<DataType>(url: string): IUseFetchResult<DataType> {
 			} catch (err) {
 				// network errors
 				if (isMountedRef.current) {
-					console.log('setError');
 					setError(err as SetStateAction<any>);
 				}
 			}
 
 			if (isMountedRef.current) {
-				console.log('setIsLoading');
 				setIsLoading(false);
 			}
 		}
@@ -49,7 +45,6 @@ export function useFetch<DataType>(url: string): IUseFetchResult<DataType> {
 		loadData();
 		// cleanup function to flag dismount
 		return () => {
-			console.log('unmounted');
 			isMountedRef.current = false;
 		};
 	}, [url]);

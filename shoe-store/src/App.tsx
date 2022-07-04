@@ -6,12 +6,11 @@ import Header from 'components/Header';
 import { Products } from 'components/Products';
 import { ProductDetail } from 'components/ProductDetail';
 import { Cart } from 'components/Cart';
+import { Checkout } from 'components/Checkout';
 
 import { ICartItem } from 'models/CartItem';
 
 import './App.css';
-import { Checkout } from 'components/Checkout';
-import { ProductDetailRefs } from 'components/ProductDetailRefs';
 
 // overkill for a single value, maybe
 // it's used in more than one place, so this makes it easier to adjust
@@ -99,7 +98,7 @@ export default function App() {
 						<Route
 							path="/:category/:id"
 							element={
-								<ProductDetailRefs
+								<ProductDetail
 									cartItems={cartItems}
 									addToCart={addToCart}
 								/>

@@ -100,3 +100,5 @@ In most cases, prefer controlled inputs.
 I can't really test this because React 18 doesn't warn, but i can add `console.log`s that prove the setters run if the component doesn't unmount and don't run if it does. So, that's what I have.
 
 **COMMIT: 6.0.3 - FEAT: ensure useFetch doesn't try to set state if the component unmounts while waiting for data**
+
+**COMMIT: 6.0.4 - CHORE: undo changes I don't want to keep route back to non-ref ProductDetail; set API delay back to 0; remove console.logs added to prove behavior**
