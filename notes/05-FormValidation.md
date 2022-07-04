@@ -250,4 +250,6 @@ Given an object in state, my approach is
 
 I have this working for `shipToName` as a POC. Let's commit it, then see where he goes.
 
-**COMMIT 5.0.11 - FEAT: add inline error for Ship to name field (and lay foundation to do the same for remaining fields)**
+**COMMIT: 5.0.11 - FEAT: add inline error for Ship to name field (and lay foundation to do the same for remaining fields)**
+
+**COMMIT: 5.0.12 - FIX: in handleBlur, rename parameter e to ev for consistency**

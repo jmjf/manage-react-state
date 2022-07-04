@@ -54,9 +54,9 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 			return newAddress as IAddress;
 		});
 	}
-	function handleBlur(e: any) {
+	function handleBlur(ev: any) {
 		setTouchedFields((oldTouchedFields) => {
-			return { ...oldTouchedFields, [e.target.id]: true };
+			return { ...oldTouchedFields, [ev.target.id]: true };
 		});
 		//TODO
 	}
