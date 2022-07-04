@@ -54,13 +54,13 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 			return newAddress as IAddress;
 		});
 	}
-	function handleBlur(e: any) {
+	function handleBlur(ev: BaseSyntheticEvent) {
 		setTouchedFields((oldTouchedFields) => {
-			return { ...oldTouchedFields, [e.target.id]: true };
+			return { ...oldTouchedFields, [ev.target.id]: true };
 		});
 		//TODO
 	}
-	async function handleSubmit(ev: any) {
+	async function handleSubmit(ev: BaseSyntheticEvent) {
 		ev.preventDefault();
 		setCheckoutStatus(CHECKOUT_STATUS.IS_SUBMITTING);
 		if (!isFormValid) {
