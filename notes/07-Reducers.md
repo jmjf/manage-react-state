@@ -64,3 +64,16 @@ So, I think
 -  The `useEffect` and other code related to localStorage are TBD
 
 **COMMIT: 7.0.1 - DOCS: intro to reducers; look at what's there and make a plan**
+
+I've started the reducer, including the add item action
+
+-  I types for each action (hardcoded string gets me type guards and required members) and a union type
+   -  Types for empty and update qty are incomplete, will add to later
+-  Wrote the `action.type` `switch` (do nothing for each action)
+   -  I'd like to have a `default` or fall through condition in case an invalid type sneaks through at runtime, but TS/lint don't like me doing that, so trust the compiler to catch everything I can control and don't drive the action type of any kind of loaded/dynamic value that isn't safely constrained (which is a good idea anyway)
+-  Moved the `addCartItem` code into and adjusted it (not deleted from `App` yet)
+   -  He may destructure `action` because that seems to be popular, not sure it's worth it here
+
+Let's commit that and see where he goes in the lecture.
+
+**COMMIT: 7.0.2 - REFACTOR: partial; set up cartReducer and add item code**
