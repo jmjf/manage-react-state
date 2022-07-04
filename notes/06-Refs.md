@@ -63,3 +63,40 @@ Let's test it so far
 Then he does the check with with a simple alert (lol). Not recommended, but better than nothing. He wraps up with a demo and a side by side code comparison.
 
 **COMMIT: 6.0.2 - Use an uncontrolled input for the product detail page**
+
+## Choosing between controlled and uncontrolled inputs
+
+Both can set an initial value and validate on submit, but controlled inputs add:
+
+-  "Instant" validation (blur, change, etc.)
+-  Conditionally disable controls based on state (e.g., add to cart button)
+-  Enforce input formatting (by checking input as entered in a text field, for example)
+-  Use same state in different inputs
+-  Build dynamic inputs tied to state
+
+Note that controlled inputs require data to reside in state passed as props to the input.
+
+In most cases, prefer controlled inputs.
+
+-  If your page is complex, uncontrolled inputs may offer a performance benefit because React doesn't diff them on every render
+-  If you're using a non-React library, you may need an uncontrolled input to use it
+
+([Reference article](https://goshacmd.com/controlled-vs-uncontrolled-inputs-react/))
+
+## Using refs to avoid setting state on unmounted components
+
+-  In `package.json`, change the json-server delay to 1500ms or greater and restart (break and `npm start` again)
+-  Click on shoes page, then click on logo to get home page -> console warning React can't set state
+   -  Because the delay means the navigation happens before React can set the state on the shoes page, so `setState()` is called on an unmounted component.
+   -  I can't seem to get the same error he does; React 18 [removed the warning](https://reactjs.org/blog/2022/03/08/react-18-upgrade-guide.html#other-notable-changes), but I don't know if that means the prevent the memory leak
+-  Prevent the message by using a ref to check if component is mounted before setting state (in the hook)
+
+-  In `useFetch`, add a ref set to false (pass value)
+-  In the `useEffect`, set the ref to true because `useEffect` runs after first render, which means the component is mounted
+   -  `isMountedRef.current = true` -- `current` is required
+-  The `useEffect` cleanup function will run when the component is unmounted, so set to false there
+   -  I see where this is going, check the ref before any state actions
+
+I can't really test this because React 18 doesn't warn, but i can add `console.log`s that prove the setters run if the component doesn't unmount and don't run if it does. So, that's what I have.
+
+**COMMIT: 6.0.3 - FEAT: ensure useFetch doesn't try to set state if the component unmounts while waiting for data**
