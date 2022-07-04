@@ -149,9 +149,11 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 						onBlur={handleBlur}
 						onChange={handleChange}
 					/>
-					{touchedFields.shipToName && errors.shipToName.length !== 0 ? (
-						<p className="alert">{errors.shipToName}</p>
-					) : null}
+					<p role="alert">
+						{(touchedFields.shipToName ||
+							checkoutStatus === CHECKOUT_STATUS.FAILED_SUBMIT) &&
+							errors.shipToName}
+					</p>
 				</div>
 				<div>
 					<label htmlFor="addressLine1Text">Address Line 1</label>
@@ -163,6 +165,11 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 						onBlur={handleBlur}
 						onChange={handleChange}
 					/>
+					<p role="alert">
+						{(touchedFields.addressLine1Text ||
+							checkoutStatus === CHECKOUT_STATUS.FAILED_SUBMIT) &&
+							errors.addressLine1Text}
+					</p>
 				</div>
 				<div>
 					<label htmlFor="addressLine2Text">Address Line 2</label>
@@ -185,6 +192,11 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 						onBlur={handleBlur}
 						onChange={handleChange}
 					/>
+					<p role="alert">
+						{(touchedFields.cityName ||
+							checkoutStatus === CHECKOUT_STATUS.FAILED_SUBMIT) &&
+							errors.cityName}
+					</p>
 				</div>
 				<div>
 					<label htmlFor="postalCode">Postal/ZIP code</label>
@@ -196,6 +208,11 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 						onBlur={handleBlur}
 						onChange={handleChange}
 					/>
+					<p role="alert">
+						{(touchedFields.postalCode ||
+							checkoutStatus === CHECKOUT_STATUS.FAILED_SUBMIT) &&
+							errors.postalCode}
+					</p>
 				</div>
 				<div>
 					<label htmlFor="countryCode">Country</label>
@@ -221,6 +238,11 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 							</option>
 						))}
 					</select>
+					<p role="alert">
+						{(touchedFields.countryCode ||
+							checkoutStatus === CHECKOUT_STATUS.FAILED_SUBMIT) &&
+							errors.countryCode}
+					</p>
 				</div>
 				<div>
 					<label htmlFor="stateCode">State/Province</label>
@@ -247,6 +269,11 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 							</option>
 						))}
 					</select>
+					<p role="alert">
+						{(touchedFields.stateCode ||
+							checkoutStatus === CHECKOUT_STATUS.FAILED_SUBMIT) &&
+							errors.stateCode}
+					</p>
 				</div>
 				<div>
 					<input

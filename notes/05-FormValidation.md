@@ -253,3 +253,25 @@ I have this working for `shipToName` as a POC. Let's commit it, then see where h
 **COMMIT: 5.0.11 - FEAT: add inline error for Ship to name field (and lay foundation to do the same for remaining fields)**
 
 **COMMIT: 5.0.12 - FIX: in handleBlur, rename parameter e to ev for consistency**
+
+In the video
+
+-  Gives the `<p>` a `role` instead of a `className` (`className` didn't do anything for me anyway, so changed)
+-  Renders the contents of the `<p>` conditionally (renders the `<p>` always)
+-  Renders if the field is touched or the form is submitted
+-  He can always render because the role puts the `<p>` beside the field instead of beneath it, so rendering doesn't add any extra vertical space
+
+Made changes based on his approach because it made sense, was simpler, and worked.
+
+-  Add errors for remaining fields
+
+He notes that, for him, this approach usually works, but form libraries may be useful (mentions Formik, React Hook Form).
+
+## Summary
+
+-  Deriving state saved us adding `useState` state
+-  "State enum" pattern
+-  Approaches for error handling (on blur and submit)
+-  Least privilege (function that does the one thing `Checkout` needs to limit risk of writing something it shouldn't)
+
+**COMMIT: 5.0.13 - FEAT: add error handling to the rest of the form**
