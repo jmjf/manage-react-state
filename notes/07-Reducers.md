@@ -89,3 +89,15 @@ Now he does add
 -  I approached adding to the cart differently than he did (he `find`s first, then returns map or copy+insert depending on the value) and I'm leaving it as I have it
 
 **COMMIT: 7.0.3 - REFACTOR: partial; add empty cart action code to cartReducer, rename a few values**
+
+Now update
+
+-  Again start with what's in `App`
+-  Added `newQuantity` and `sku` to the update action type
+-  Wrapped both the add and update `case` block in `{}` because both use `sku` and TS/linter see it as a redeclaration without the `{}`
+   -  The `switch`'s `{}` are the block scope otherwise
+-  Added a check to ensure the values are usable (return old otherwise)
+
+Let's commit, then see what he does.
+
+**COMMIT: 7.0.4 - REFACTOR: partial; add update cart code to cartReducer**
