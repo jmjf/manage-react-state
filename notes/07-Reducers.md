@@ -77,3 +77,15 @@ I've started the reducer, including the add item action
 Let's commit that and see where he goes in the lecture.
 
 **COMMIT: 7.0.2 - REFACTOR: partial; set up cartReducer and add item code**
+
+I started with add, so of course he starts with empty "because it's the simplest." Okay, I can do that because it is simple.
+
+And now he wants to talk about unexpected types (because his linter wants a `default`). TS/linter suggest I don't need to worry about that case because my type precludes it. My strategy would be either a `default` or a fallthrough (assuming all `case` branches `return`).
+
+Now he does add
+
+-  I renamed a few things, but not based on what he was doing, just looking at them and thinking about names
+-  I destructured `id` and `sku` from `action`, still not sure it's worth it, but maybe and it doesn't hurt anything
+-  I approached adding to the cart differently than he did (he `find`s first, then returns map or copy+insert depending on the value) and I'm leaving it as I have it
+
+**COMMIT: 7.0.3 - REFACTOR: partial; add empty cart action code to cartReducer, rename a few values**

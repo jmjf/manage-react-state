@@ -2,8 +2,8 @@ import { ICartItem } from 'models/CartItem';
 
 type AddItemToCart = {
 	type: 'AddItemToCart';
-	itemId: number;
-	itemSku: string;
+	id: number;
+	sku: string;
 };
 
 type EmptyCart = {
@@ -17,37 +17,37 @@ type UpdateItemQuantity = {
 export type CartReducerAction = AddItemToCart | EmptyCart | UpdateItemQuantity;
 
 export function cartReducer(
-	oldCart: ICartItem[],
+	oldCartItems: ICartItem[],
 	action: CartReducerAction
 ): ICartItem[] {
 	switch (action.type) {
 		case 'AddItemToCart':
+			const { id, sku } = action;
 			// do nothing if required data missing
-			if (!action.itemId || !action.itemSku) return oldCart;
+			if (!id || !sku) return oldCartItems;
 
-			const newCart = oldCart.map((cartItem) =>
-				cartItem.sku === action.itemSku
+			const newCart = oldCartItems.map((cartItem) =>
+				cartItem.sku === sku
 					? { ...cartItem, quantity: cartItem.quantity + 1 }
 					: cartItem
 			);
 			// If the item isn't found in the new cart
-			if (!newCart.find((cartItem) => cartItem.sku === action.itemSku))
+			if (!newCart.find((cartItem) => cartItem.sku === sku))
 				newCart.push({
-					id: action.itemId,
-					sku: action.itemSku,
+					id: id,
+					sku: sku,
 					quantity: 1,
 				});
 			return newCart;
 			break;
 		case 'EmptyCart':
-			console.log('CartReducerAction EmptyCart action not implemented');
-			return oldCart;
+			return [];
 			break;
 		case 'UpdateItemQuantity':
 			console.log(
 				'CartReducerAction UpdateItemQuantity action not implemented'
 			);
-			return oldCart;
+			return oldCartItems;
 			break;
 	}
 }
