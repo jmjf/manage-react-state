@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 import { Route, Routes } from 'react-router';
 
 import Footer from 'components/Footer';
@@ -11,6 +11,7 @@ import { Checkout } from 'components/Checkout';
 import { ICartItem } from 'models/CartItem';
 
 import './App.css';
+import { cartReducer } from 'reducers/cartReducer';
 
 // overkill for a single value, maybe
 // it's used in more than one place, so this makes it easier to adjust
@@ -19,8 +20,31 @@ const LOCAL_STORAGE_KEYS = {
 	CART_ITEMS: 'cartItems',
 };
 
+// IIFE to set up inital cart items
+const initialCartItems = ((): ICartItem[] => {
+	const getItemResult = localStorage.getItem(LOCAL_STORAGE_KEYS.CART_ITEMS);
+	if (
+		getItemResult === null ||
+		getItemResult === undefined ||
+		getItemResult === ''
+	)
+		return [];
+
+	try {
+		const cartItems = JSON.parse(getItemResult);
+		if (!Array.isArray(cartItems)) return [];
+		return cartItems;
+	} catch (e) {
+		console.log('ERROR: failed reading cart data; returning empty cart');
+		return [];
+	}
+})();
+
 export default function App() {
-	const [cartItems, setCartItems] = useState(initializeCartItems);
+	const [cartItems, dispatchCartItemsAction] = useReducer(
+		cartReducer,
+		initialCartItems
+	);
 
 	useEffect(() => {
 		localStorage.setItem(
@@ -28,58 +52,6 @@ export default function App() {
 			JSON.stringify(cartItems)
 		);
 	}, [cartItems]);
-
-	function initializeCartItems(): ICartItem[] {
-		const getItemResult = localStorage.getItem(LOCAL_STORAGE_KEYS.CART_ITEMS);
-		if (
-			getItemResult === null ||
-			getItemResult === undefined ||
-			getItemResult === ''
-		)
-			return [];
-
-		try {
-			const cartItems = JSON.parse(getItemResult);
-			if (!Array.isArray(cartItems)) return [];
-			return cartItems;
-		} catch (e) {
-			console.log('ERROR: failed reading cart data; returning empty cart');
-			return [];
-		}
-	}
-
-	function addToCart(id: number, sku: string): void {
-		setCartItems((oldCart) => {
-			// I need a copy of the cart so I can setState anyway, so first copy and try to update as we do
-			const newCart = oldCart.map((cartItem) =>
-				cartItem.sku === sku
-					? { ...cartItem, quantity: cartItem.quantity + 1 }
-					: cartItem
-			);
-			// If the item isn't found in the new cart
-			if (!newCart.find((cartItem) => cartItem.sku === sku))
-				newCart.push({ id, sku, quantity: 1 });
-			return newCart;
-		});
-	}
-
-	function updateQuantity(sku: string, newQuantity: number): void {
-		setCartItems((oldCart) => {
-			if (newQuantity === 0) {
-				return oldCart.filter((cartItem) => cartItem.sku !== sku);
-			} else {
-				return oldCart.map((cartItem) =>
-					cartItem.sku === sku
-						? { ...cartItem, quantity: newQuantity }
-						: cartItem
-				);
-			}
-		});
-	}
-
-	function emptyCartItems(): void {
-		setCartItems([] as ICartItem[]);
-	}
 
 	return (
 		<>
@@ -99,8 +71,7 @@ export default function App() {
 							path="/:category/:id"
 							element={
 								<ProductDetail
-									cartItems={cartItems}
-									addToCart={addToCart}
+									dispatchCartItemsAction={dispatchCartItemsAction}
 								/>
 							}
 						/>
@@ -109,7 +80,7 @@ export default function App() {
 							element={
 								<Cart
 									cartItems={cartItems}
-									updateQuantity={updateQuantity}
+									dispatchCartItemsAction={dispatchCartItemsAction}
 								/>
 							}
 						/>
@@ -117,8 +88,7 @@ export default function App() {
 							path="/checkout"
 							element={
 								<Checkout
-									cartItems={cartItems}
-									emptyCartItems={emptyCartItems}
+									dispatchCartItemsAction={dispatchCartItemsAction}
 								/>
 							}
 						/>

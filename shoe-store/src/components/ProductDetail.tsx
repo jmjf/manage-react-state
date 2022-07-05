@@ -3,18 +3,20 @@ import React, { useState } from 'react';
 import { useFetch } from 'hooks/useFetch';
 import { useNavigate, useParams } from 'react-router';
 
+import { CartItemsDispatcher } from 'reducers/cartReducer';
+
 import { PageNotFound } from './PageNotFound';
 import Spinner from './Spinner';
 
 import { IProduct } from 'models/Product';
-import { ICartItem } from 'models/CartItem';
 
 interface IProductDetailProps {
-	cartItems: ICartItem[];
-	addToCart: (id: number, sku: string) => void;
+	dispatchCartItemsAction: CartItemsDispatcher;
 }
 
-export function ProductDetail({ cartItems, addToCart }: IProductDetailProps) {
+export function ProductDetail({
+	dispatchCartItemsAction,
+}: IProductDetailProps) {
 	const { id } = useParams();
 	const { data, isLoading, error } = useFetch<IProduct>(`products/${id}`);
 	const [selectedSku, setSelectedSku] = useState('');
@@ -26,7 +28,11 @@ export function ProductDetail({ cartItems, addToCart }: IProductDetailProps) {
 
 	const onAddToCart = async (ev: React.MouseEvent<HTMLButtonElement>) => {
 		ev.preventDefault();
-		addToCart(product.id, selectedSku);
+		dispatchCartItemsAction({
+			type: 'AddItemToCart',
+			id: product.id,
+			sku: selectedSku,
+		});
 		navigate('/cart', { replace: true });
 	};
 

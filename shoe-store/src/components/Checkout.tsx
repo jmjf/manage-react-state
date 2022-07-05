@@ -2,7 +2,6 @@ import { BaseSyntheticEvent, useState } from 'react';
 
 import { saveShippingAddress } from 'services/shippingService';
 
-import { ICartItem } from 'models/CartItem';
 import {
 	IAddress,
 	emptyAddress,
@@ -10,6 +9,7 @@ import {
 	ICountryState,
 	countryStates,
 } from 'models/Location';
+import { CartItemsDispatcher } from 'reducers/cartReducer';
 
 // I want to filter the list of states by country
 
@@ -21,15 +21,14 @@ const CHECKOUT_STATUS = {
 };
 
 interface ICheckoutProps {
-	cartItems: ICartItem[];
-	emptyCartItems: () => void;
+	dispatchCartItemsAction: CartItemsDispatcher;
 }
 
 const emptyTouchedFields = Object.fromEntries(
 	Object.keys(emptyAddress).map((key) => [key, false])
 );
 
-export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
+export function Checkout({ dispatchCartItemsAction }: ICheckoutProps) {
 	const [address, setAddress] = useState(emptyAddress);
 	const [saveError, setSaveError] = useState(null as unknown as Error);
 	const [touchedFields, setTouchedFields] = useState(emptyTouchedFields);
@@ -69,15 +68,15 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 		}
 		try {
 			const saveResult = await saveShippingAddress(address);
-			console.log('saveResult', saveResult);
+
 			if (saveResult.ok) {
 				setCheckoutStatus(CHECKOUT_STATUS.SUCCESSFUL_SUBMIT);
-				emptyCartItems();
+				dispatchCartItemsAction({ type: 'EmptyCart' });
 			} else {
 				setCheckoutStatus(CHECKOUT_STATUS.FAILED_SUBMIT);
 			}
 		} catch (err) {
-			console.log('saveError', err);
+			console.log('ERROR: saveError', err);
 			setSaveError(err as Error);
 			// will throw an error, so don't need to set status
 		}
@@ -115,8 +114,6 @@ export function Checkout({ cartItems, emptyCartItems }: ICheckoutProps) {
 				: 'Country code is required',
 		};
 	}
-
-	console.log(errors);
 
 	if (saveError) throw saveError;
 	if (checkoutStatus === CHECKOUT_STATUS.SUCCESSFUL_SUBMIT) {

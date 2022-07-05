@@ -2,15 +2,16 @@ import { useFetchAll } from 'hooks/useFetchAll';
 import { ICartItem } from 'models/CartItem';
 import { IProduct, ISku } from 'models/Product';
 import { useNavigate } from 'react-router';
+import { CartItemsDispatcher } from 'reducers/cartReducer';
 import { arrayify } from 'utils';
 import Spinner from './Spinner';
 
 interface ICartProps {
 	cartItems: ICartItem[];
-	updateQuantity: (sku: string, newQuantity: number) => void;
+	dispatchCartItemsAction: CartItemsDispatcher;
 }
 
-export function Cart({ cartItems, updateQuantity }: ICartProps) {
+export function Cart({ cartItems, dispatchCartItemsAction }: ICartProps) {
 	const urls = cartItems.map((cartItem) => `products/${cartItem.id}`);
 	const { data, isLoading, error } = useFetchAll<IProduct>(urls);
 	const products = arrayify<IProduct>(data);
@@ -60,7 +61,11 @@ export function Cart({ cartItems, updateQuantity }: ICartProps) {
 						<select
 							aria-label={`Select quantity for ${name} size {size}`}
 							onChange={(e) => {
-								updateQuantity(sku, parseInt(e.target.value));
+								dispatchCartItemsAction({
+									type: 'UpdateItemQuantity',
+									sku,
+									newQuantity: parseInt(e.target.value),
+								});
 							}}
 							value={quantity}
 						>

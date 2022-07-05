@@ -101,3 +101,35 @@ Now update
 Let's commit, then see what he does.
 
 **COMMIT: 7.0.4 - REFACTOR: partial; add update cart code to cartReducer**
+
+He has the same `sku` block issue and solves it the same way (except he only wraps one case).
+
+Now, delete all the state updater functions in `App`, which breaks stuff in `App`.
+
+Use the reducer in `App`
+
+-  Replace `useState` with `useReducer`
+-  He moves the intialize function outside the component and sets up an intial value based on it
+   -  I'm going to make it an IIFE
+   -  He doesn't use the init function (3rd arg)
+-  Replace functions we were passing with the action dispatcher function
+   -  Now I have type errors because the components expect a different function signature, so fix that
+   -  Export a type for `CartItemDispatcher` from the reducer so I can use it everywhere `Dispatch<CartReducerAction>`
+   -  In `ProductDetail`, add calls `dispatchCartItemsAction({type: 'AddItemToCart', id: product.id, sku: selectedSku})`
+   -  In `Cart`, replace update with `dispatchCardItemsAction({ type: 'UpdateItemQuantity', sku, newQuantity: parseInt(e.target.value)})`
+      -  Now that I have the dispatcher type correct, VSCode shows me options for `type` -- awesome!
+   -  In `Checkout`, `dispatchCartItemsAction({type: 'EmptyCart'})`
+   -  Also remove `cartItems` prop from `Checkout` and `ProductDetails` because neither uses it
+   -  And remove a couple of `console.log`s from `Checkout` that I don't need now
+-  Testing shows it works
+   -  Shoes: lists shoes, filters by size, select shoe -> product detail
+   -  Product detail: appears as expected, selects size, adds to cart
+   -  Cart: list products added, changes quantity, cart contents survive reload (localStorage is working)
+   -  Can navigate back to shoes and add more products to the cart
+   -  Checkout: empties cart when done, writes data to `db.json`
+-  Linter is complaining because I like to put `break`s at the end of `case`s, even if the case returns (unreachable code)
+   -  Fine, make it happy, replace with a comment that the return replaces break
+
+Based on what I'm seeing, the reducer can't handle an adapter unless that adapter is passed to the components that call it. Maybe it could if we did that, but it would probably be undesirable. The reducer value is state, just not `useState` state and managed differently. IMO, the action dispatch approach has some definite advantages, though it's best with TS enforcing and prompting for action types, etc. I'm curious how it plays with context (next unit).
+
+**COMMIT: 7.0.5 - REFACTOR: replace state in App and child components with the reducer**
