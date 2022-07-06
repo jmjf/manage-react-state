@@ -96,3 +96,34 @@ TS error because I need `.tsx` instead of `.ts`.
 Okay, that's looking better. Now I need the other components to use context so `App` doesn't need to pass them props it doesn't know.
 
 **COMMIT: 8.0.3 - REFACTOR: (code not working) move CartContextProvider into CartContext, including full reducer setup**
+
+## Convert other components to context
+
+`ProductDetail` needs to use context
+
+-  Remove props
+-  `useContext` and destructure
+-  Remove props in `App`
+
+`Checkout` needs to use context
+
+-  Remove props
+-  `useContext` and destructure
+-  Remove props in `App`
+
+-  Remove unused imports and interfaces in everything (so eslint stops complaining).
+
+I'm getting an error on `CartContext.ts` so it looks like something is stuck in cache. Kill and restart.
+
+That's better. Let's test.
+
+-  Shoe list filters as expected
+-  Selecting a shoe adds it to the cart
+-  Cart can change quantity, including remove, and updates totals
+-  Cart button navigates to Checkout
+-  Checkout accepts data and flags errors
+-  Submit on Checkout saves data and empties cart
+
+All seems well.
+
+**COMMIT: 8.0.4 - REFACTOR: get the whole app working with context**

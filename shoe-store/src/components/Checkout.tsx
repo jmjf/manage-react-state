@@ -1,4 +1,4 @@
-import { BaseSyntheticEvent, useState } from 'react';
+import { BaseSyntheticEvent, useContext, useState } from 'react';
 
 import { saveShippingAddress } from 'services/shippingService';
 
@@ -9,7 +9,7 @@ import {
 	ICountryState,
 	countryStates,
 } from 'models/Location';
-import { CartItemsDispatcher } from 'reducers/cartReducer';
+import { CartContext } from 'contexts/CartContext';
 
 // I want to filter the list of states by country
 
@@ -20,15 +20,12 @@ const CHECKOUT_STATUS = {
 	SUCCESSFUL_SUBMIT: 'SUCCESSFUL_SUBMIT',
 };
 
-interface ICheckoutProps {
-	dispatchCartItemsAction: CartItemsDispatcher;
-}
-
 const emptyTouchedFields = Object.fromEntries(
 	Object.keys(emptyAddress).map((key) => [key, false])
 );
 
-export function Checkout({ dispatchCartItemsAction }: ICheckoutProps) {
+export function Checkout() {
+	const { dispatchCartItemsAction } = useContext(CartContext);
 	const [address, setAddress] = useState(emptyAddress);
 	const [saveError, setSaveError] = useState(null as unknown as Error);
 	const [touchedFields, setTouchedFields] = useState(emptyTouchedFields);

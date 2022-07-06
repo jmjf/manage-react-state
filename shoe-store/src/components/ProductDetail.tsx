@@ -1,22 +1,16 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import { useFetch } from 'hooks/useFetch';
 import { useNavigate, useParams } from 'react-router';
-
-import { CartItemsDispatcher } from 'reducers/cartReducer';
 
 import { PageNotFound } from './PageNotFound';
 import Spinner from './Spinner';
 
 import { IProduct } from 'models/Product';
+import { CartContext } from 'contexts/CartContext';
 
-interface IProductDetailProps {
-	dispatchCartItemsAction: CartItemsDispatcher;
-}
-
-export function ProductDetail({
-	dispatchCartItemsAction,
-}: IProductDetailProps) {
+export function ProductDetail() {
+	const { dispatchCartItemsAction } = useContext(CartContext);
 	const { id } = useParams();
 	const { data, isLoading, error } = useFetch<IProduct>(`products/${id}`);
 	const [selectedSku, setSelectedSku] = useState('');

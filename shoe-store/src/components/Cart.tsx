@@ -6,16 +6,10 @@ import { IProduct, ISku } from 'models/Product';
 
 import { CartContext } from 'contexts/CartContext';
 import { useFetchAll } from 'hooks/useFetchAll';
-import { CartItemsDispatcher } from 'reducers/cartReducer';
 
 import { arrayify } from 'utils';
 
 import Spinner from './Spinner';
-
-interface ICartProps {
-	cartItems: ICartItem[];
-	dispatchCartItemsAction: CartItemsDispatcher;
-}
 
 export function Cart() {
 	const { cartItems, dispatchCartItemsAction } = useContext(CartContext);

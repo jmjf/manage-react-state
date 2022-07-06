@@ -1,4 +1,3 @@
-import { useEffect, useReducer } from 'react';
 import { Route, Routes } from 'react-router';
 
 import Footer from 'components/Footer';
@@ -28,11 +27,7 @@ export default function App() {
 						/>
 						<Route
 							path="/:category/:id"
-							element={
-								<ProductDetail
-									dispatchCartItemsAction={dispatchCartItemsAction}
-								/>
-							}
+							element={<ProductDetail />}
 						/>
 						<Route
 							path="/cart"
@@ -40,11 +35,7 @@ export default function App() {
 						/>
 						<Route
 							path="/checkout"
-							element={
-								<Checkout
-									dispatchCartItemsAction={dispatchCartItemsAction}
-								/>
-							}
+							element={<Checkout />}
 						/>
 					</Routes>
 				</main>
