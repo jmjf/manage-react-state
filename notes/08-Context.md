@@ -78,3 +78,21 @@ So how is that so much more complex than what we had before?
    -  Another challenge might be that the properties the component needs are not exposed when using the component, so you need to know what properties must be available on the provider.
 
 **COMMIT: 8.0.2 - REFACTOR: use context to pass reducer parts to Cart**
+
+## Provider component
+
+Now he's going to create the provider as a separate component, which I expect means:
+
+-  Create a `CartContextProvider` in `CartContext`
+-  Use that instead of `<CartContext.Provider>` in `App`
+
+I've set it up like I did in the previous course, but I'm getting a TS error (can't find namespace `CartContext`). Let's see what he does.
+
+-  He's moving `useReducer` into `CartContext.ts`, which suggests he's planning to move a chunk of code out of `App`.
+-  This makes sense, though, because App doesn't care about any of this.
+
+TS error because I need `.tsx` instead of `.ts`.
+
+Okay, that's looking better. Now I need the other components to use context so `App` doesn't need to pass them props it doesn't know.
+
+**COMMIT: 8.0.3 - REFACTOR: (code not working) move CartContextProvider into CartContext, including full reducer setup**

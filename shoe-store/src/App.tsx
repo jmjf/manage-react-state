@@ -8,54 +8,12 @@ import { ProductDetail } from 'components/ProductDetail';
 import { Cart } from 'components/Cart';
 import { Checkout } from 'components/Checkout';
 
-import { ICartItem } from 'models/CartItem';
-
 import './App.css';
-import { cartReducer } from 'reducers/cartReducer';
-import { CartContext } from 'contexts/CartContext';
-
-// overkill for a single value, maybe
-// it's used in more than one place, so this makes it easier to adjust
-// if we end up with more keys, it's a wise move
-const LOCAL_STORAGE_KEYS = {
-	CART_ITEMS: 'cartItems',
-};
-
-// IIFE to set up inital cart items
-const initialCartItems = ((): ICartItem[] => {
-	const getItemResult = localStorage.getItem(LOCAL_STORAGE_KEYS.CART_ITEMS);
-	if (
-		getItemResult === null ||
-		getItemResult === undefined ||
-		getItemResult === ''
-	)
-		return [];
-
-	try {
-		const cartItems = JSON.parse(getItemResult);
-		if (!Array.isArray(cartItems)) return [];
-		return cartItems;
-	} catch (e) {
-		console.log('ERROR: failed reading cart data; returning empty cart');
-		return [];
-	}
-})();
+import { CartContextProvider } from 'contexts/CartContext';
 
 export default function App() {
-	const [cartItems, dispatchCartItemsAction] = useReducer(
-		cartReducer,
-		initialCartItems
-	);
-
-	useEffect(() => {
-		localStorage.setItem(
-			LOCAL_STORAGE_KEYS.CART_ITEMS,
-			JSON.stringify(cartItems)
-		);
-	}, [cartItems]);
-
 	return (
-		<CartContext.Provider value={{ cartItems, dispatchCartItemsAction }}>
+		<CartContextProvider>
 			<div className="content">
 				<Header />
 				<main>
@@ -92,6 +50,6 @@ export default function App() {
 				</main>
 			</div>
 			<Footer />
-		</CartContext.Provider>
+		</CartContextProvider>
 	);
 }
