@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 
 import { useFetch } from 'hooks/useFetch';
 import { useNavigate, useParams } from 'react-router';
@@ -7,10 +7,10 @@ import { PageNotFound } from './PageNotFound';
 import Spinner from './Spinner';
 
 import { IProduct } from 'models/Product';
-import { CartContext } from 'contexts/CartContext';
+import { useCartContext } from 'hooks/useCartContext';
 
 export function ProductDetail() {
-	const { dispatchCartItemsAction } = useContext(CartContext);
+	const { dispatchCartItemsAction } = useCartContext();
 	const { id } = useParams();
 	const { data, isLoading, error } = useFetch<IProduct>(`products/${id}`);
 	const [selectedSku, setSelectedSku] = useState('');

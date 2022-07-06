@@ -2,6 +2,7 @@ import {
 	createContext,
 	Dispatch,
 	PropsWithChildren,
+	useContext,
 	useEffect,
 	useReducer,
 } from 'react';
@@ -9,6 +10,36 @@ import {
 import { cartReducer, CartReducerAction } from 'reducers/cartReducer';
 
 import { ICartItem } from 'models/CartItem';
+
+// context and other values these exports used are below them
+// they're at the top of the file because they're the important things here
+
+export function useCartContext() {
+	const context = useContext(CartContext);
+	return context;
+}
+
+export function CartContextProvider(props: PropsWithChildren) {
+	const [cartItems, dispatchCartItemsAction] = useReducer(
+		cartReducer,
+		initialCartItems
+	);
+
+	useEffect(() => {
+		localStorage.setItem(
+			LOCAL_STORAGE_KEYS.CART_ITEMS,
+			JSON.stringify(cartItems)
+		);
+	}, [cartItems]);
+
+	const contextValue = { cartItems, dispatchCartItemsAction };
+
+	return (
+		<CartContext.Provider value={contextValue}>
+			{props.children}
+		</CartContext.Provider>
+	);
+}
 
 // overkill for a single value, maybe
 // it's used in more than one place, so this makes it easier to adjust
@@ -42,28 +73,6 @@ interface ICartContextState {
 	dispatchCartItemsAction: Dispatch<CartReducerAction>;
 }
 
-export const CartContext = createContext<ICartContextState>(
+const CartContext = createContext<ICartContextState>(
 	{} as unknown as ICartContextState
 );
-
-export function CartContextProvider(props: PropsWithChildren) {
-	const [cartItems, dispatchCartItemsAction] = useReducer(
-		cartReducer,
-		initialCartItems
-	);
-
-	useEffect(() => {
-		localStorage.setItem(
-			LOCAL_STORAGE_KEYS.CART_ITEMS,
-			JSON.stringify(cartItems)
-		);
-	}, [cartItems]);
-
-	const contextValue = { cartItems, dispatchCartItemsAction };
-
-	return (
-		<CartContext.Provider value={contextValue}>
-			{props.children}
-		</CartContext.Provider>
-	);
-}

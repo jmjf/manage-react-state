@@ -1,18 +1,17 @@
-import { useContext } from 'react';
 import { useNavigate } from 'react-router';
 
 import { ICartItem } from 'models/CartItem';
 import { IProduct, ISku } from 'models/Product';
 
-import { CartContext } from 'contexts/CartContext';
 import { useFetchAll } from 'hooks/useFetchAll';
 
 import { arrayify } from 'utils';
 
 import Spinner from './Spinner';
+import { useCartContext } from 'hooks/useCartContext';
 
 export function Cart() {
-	const { cartItems, dispatchCartItemsAction } = useContext(CartContext);
+	const { cartItems, dispatchCartItemsAction } = useCartContext();
 	const urls = cartItems.map((cartItem) => `products/${cartItem.id}`);
 	const { data, isLoading, error } = useFetchAll<IProduct>(urls);
 	const products = arrayify<IProduct>(data);

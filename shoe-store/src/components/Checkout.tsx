@@ -1,4 +1,4 @@
-import { BaseSyntheticEvent, useContext, useState } from 'react';
+import { BaseSyntheticEvent, useState } from 'react';
 
 import { saveShippingAddress } from 'services/shippingService';
 
@@ -9,7 +9,7 @@ import {
 	ICountryState,
 	countryStates,
 } from 'models/Location';
-import { CartContext } from 'contexts/CartContext';
+import { useCartContext } from 'hooks/useCartContext';
 
 // I want to filter the list of states by country
 
@@ -25,7 +25,7 @@ const emptyTouchedFields = Object.fromEntries(
 );
 
 export function Checkout() {
-	const { dispatchCartItemsAction } = useContext(CartContext);
+	const { dispatchCartItemsAction } = useCartContext();
 	const [address, setAddress] = useState(emptyAddress);
 	const [saveError, setSaveError] = useState(null as unknown as Error);
 	const [touchedFields, setTouchedFields] = useState(emptyTouchedFields);

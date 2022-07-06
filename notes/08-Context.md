@@ -99,18 +99,14 @@ Okay, that's looking better. Now I need the other components to use context so `
 
 ## Convert other components to context
 
-`ProductDetail` needs to use context
-
--  Remove props
--  `useContext` and destructure
--  Remove props in `App`
-
-`Checkout` needs to use context
-
--  Remove props
--  `useContext` and destructure
--  Remove props in `App`
-
+-  `ProductDetail` needs to use context
+   -  Remove props
+   -  `useContext` and destructure
+   -  Remove props in `App`
+-  `Checkout` needs to use context
+   -  Remove props
+   -  `useContext` and destructure
+   -  Remove props in `App`
 -  Remove unused imports and interfaces in everything (so eslint stops complaining).
 
 I'm getting an error on `CartContext.ts` so it looks like something is stuck in cache. Kill and restart.
@@ -135,3 +131,33 @@ Main point here is he does it in `index.js` instead of `App`. That's an easy mov
 You can wrap in context at a lower level if it makes sense, but context is often global or near global.
 
 **COMMIT: 8.0.5 - REFACTOR: move CartContextProvider wrap to index.js**
+
+## Custom hook for using context
+
+Instead of changing all the components to use the context, he's going to create a custom hook that does it. I'm not sure how that makes life easier, but let's see what he does and where it goes.
+
+Benefits
+
+-  Makes the context easier to use
+-  Don't need to export the context, so protects it
+-  Can provide an interface/adapter over the context for error handling, etc. (??? my guess of where what he said is going)
+
+The hook is just a function that uses the context and returns it. Don't export the context.
+
+Which breaks several things (list isn't surprising)
+
+-  `ProductDetail`
+   -  Remove context and `useContext` imports
+   -  Replace `useContext` with `useCartContext`, which doesn't need a context passed
+-  `Checkout`
+   -  Same
+-  `Cart`
+   -  Same
+
+We're hook-ifying it, so I'm renaming the file to `useCartContext` and moving it to `src/hooks`.
+
+So, it's marginally easier to use.
+Need to read more about context to understand any risks to exporting it.
+Error handling example promised in the next video.
+
+**COMMIT: 8.0.6 - REFACTOR: expose context with a hook instead of exporting context; make everything work again**
