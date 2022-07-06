@@ -8,11 +8,10 @@ import { Cart } from 'components/Cart';
 import { Checkout } from 'components/Checkout';
 
 import './App.css';
-import { CartContextProvider } from 'contexts/CartContext';
 
 export default function App() {
 	return (
-		<CartContextProvider>
+		<>
 			<div className="content">
 				<Header />
 				<main>
@@ -41,6 +40,6 @@ export default function App() {
 				</main>
 			</div>
 			<Footer />
-		</CartContextProvider>
+		</>
 	);
 }

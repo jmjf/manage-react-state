@@ -127,3 +127,11 @@ That's better. Let's test.
 All seems well.
 
 **COMMIT: 8.0.4 - REFACTOR: get the whole app working with context**
+
+## Wrapping in context
+
+Main point here is he does it in `index.js` instead of `App`. That's an easy move. Quick test looks good.
+
+You can wrap in context at a lower level if it makes sense, but context is often global or near global.
+
+**COMMIT: 8.0.5 - REFACTOR: move CartContextProvider wrap to index.js**
