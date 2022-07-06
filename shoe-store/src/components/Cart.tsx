@@ -1,9 +1,15 @@
-import { useFetchAll } from 'hooks/useFetchAll';
+import { useContext } from 'react';
+import { useNavigate } from 'react-router';
+
 import { ICartItem } from 'models/CartItem';
 import { IProduct, ISku } from 'models/Product';
-import { useNavigate } from 'react-router';
+
+import { CartContext } from 'contexts/CartContext';
+import { useFetchAll } from 'hooks/useFetchAll';
 import { CartItemsDispatcher } from 'reducers/cartReducer';
+
 import { arrayify } from 'utils';
+
 import Spinner from './Spinner';
 
 interface ICartProps {
@@ -11,7 +17,8 @@ interface ICartProps {
 	dispatchCartItemsAction: CartItemsDispatcher;
 }
 
-export function Cart({ cartItems, dispatchCartItemsAction }: ICartProps) {
+export function Cart() {
+	const { cartItems, dispatchCartItemsAction } = useContext(CartContext);
 	const urls = cartItems.map((cartItem) => `products/${cartItem.id}`);
 	const { data, isLoading, error } = useFetchAll<IProduct>(urls);
 	const products = arrayify<IProduct>(data);

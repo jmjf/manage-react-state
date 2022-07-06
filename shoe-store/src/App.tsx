@@ -12,6 +12,7 @@ import { ICartItem } from 'models/CartItem';
 
 import './App.css';
 import { cartReducer } from 'reducers/cartReducer';
+import { CartContext } from 'contexts/CartContext';
 
 // overkill for a single value, maybe
 // it's used in more than one place, so this makes it easier to adjust
@@ -54,7 +55,7 @@ export default function App() {
 	}, [cartItems]);
 
 	return (
-		<>
+		<CartContext.Provider value={{ cartItems, dispatchCartItemsAction }}>
 			<div className="content">
 				<Header />
 				<main>
@@ -77,12 +78,7 @@ export default function App() {
 						/>
 						<Route
 							path="/cart"
-							element={
-								<Cart
-									cartItems={cartItems}
-									dispatchCartItemsAction={dispatchCartItemsAction}
-								/>
-							}
+							element={<Cart />}
 						/>
 						<Route
 							path="/checkout"
@@ -96,6 +92,6 @@ export default function App() {
 				</main>
 			</div>
 			<Footer />
-		</>
+		</CartContext.Provider>
 	);
 }

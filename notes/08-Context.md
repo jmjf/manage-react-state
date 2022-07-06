@@ -46,3 +46,35 @@ When I worked with VueX, it was supposed to have a lot in common with Redux in t
 **COMMIT: 8.0.1 - DOCS: notes on state management options and factors to consider when choosing**
 
 ## Using context
+
+-  Create `src/contexts/CartContext.ts`
+-  Create the context with `createContext()`
+
+The provider will share cart data and `cartReducer`'s dispatch function.
+(I guess we may see how context and reducers can work together?)
+
+He creates the provider in `App` by wrapping the JSX in `<CartContext.Provider>`
+
+-  He isn't creating a reusable provider that wraps its children
+-  Not sure it makes much difference unless the provider will be used in different parts of the component tree
+   -  Not sure that's a case we'd expect, so follow his lead, but be ready for TS to tell us different
+-  And TS isn't happy because I need to tell it what type to expect
+   -  Declared `ICartContextState` in `CartContext.ts` and used it as the type for the context value
+
+Now use the context in `Cart` (starting this on my own from memory of the previous course)
+
+-  Instead of accepting props, `useContext` and destructure (remove props)
+-  Remove props passed in `App` (saw it unhappy after the change)
+-  And I suspect that's really all there is to it; let's see what I missed
+
+He did the same and is going to test, so let's pause and test. (Can add to cart, change data, etc.) Seems to be working.
+
+So how is that so much more complex than what we had before?
+
+-  He says use it in large apps where passing props is tedious
+-  But I'm struggling to see how this is much more complex than local state and prop passing
+-  In my mind, NOT needing to pass props is easier
+   -  I guess one challenge is, it may make components less reusable (must know the context name)
+   -  Another challenge might be that the properties the component needs are not exposed when using the component, so you need to know what properties must be available on the provider.
+
+**COMMIT: 8.0.2 - REFACTOR: use context to pass reducer parts to Cart**
