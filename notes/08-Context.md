@@ -161,3 +161,30 @@ Need to read more about context to understand any risks to exporting it.
 Error handling example promised in the next video.
 
 **COMMIT: 8.0.6 - REFACTOR: expose context with a hook instead of exporting context; make everything work again**
+
+## Error handling
+
+The next video was actually using the context hook in the code, which I did earlier.
+
+If we're calling `useCartContext()`, we must have a `CartContextProvider` in scope. The hook can check that the provider is in scope.
+
+-  If the context is falsey, throw an error
+   -  He uses a detailed message explaining details, but in the real world, that's exposing information users don't need and shouldn't have
+   -  We don't want users changing application code at the behest of an error message (or attackers getting more info than they should)
+
+Remove the context provider wrapper in `index.js` to induce the error. And it isn't throwing the error for me. `console.log` shows the context is `{}`, which is truthy. So add `|| Object.keys(context).length === 0` to throw if the context has nothing in it. Now my error boundary is concealing the screen error, but I can see my thrown error in the console (DevTools).
+
+Now restore the context provider and all is well.
+
+So, what I thought might lead to an adapter over the context isn't quite that. I assume the context hook could do that though. For example, since we're using the reducer and actions, we could expose functions for each action if we wanted to conceal that detail. (I like the action/reducer model, though, so probably wouldn't.)
+
+```tsx
+const {data1, data2, ... , dispatcher} = useContext(context);
+...
+// assuming the data parameter is an object with the data required to add
+return { data1, data2, ... , addData: (data) => {dispatcher({type: 'add', ...data})} ... }
+```
+
+The advantage of that approach is a component could extract functions that do only what it needs (vs. dispatcher function can dispatch any action), which might give better isolation/safety. It harks back toward the state-ly model of having updater functions, but doesn't require prop drilling them down to children, so is an improvement. (If you're worried about developers doing stupid things, this approach might be a better approach.)
+
+**COMMIT: 8.0.7 - FEAT: check context is valid and throw an error if it isn't (in useCartContext hook)**

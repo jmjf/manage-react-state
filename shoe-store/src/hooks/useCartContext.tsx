@@ -16,6 +16,9 @@ import { ICartItem } from 'models/CartItem';
 
 export function useCartContext() {
 	const context = useContext(CartContext);
+	if (!context || Object.keys(context).length === 0) {
+		throw new Error('Missing context provider for cart');
+	}
 	return context;
 }
 
