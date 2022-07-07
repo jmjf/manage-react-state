@@ -38,3 +38,74 @@ Class components
    -  Context
 
 **COMMIT: 9.0.1 - DOCS: module intro notes**
+
+## Convert Checkout to a class
+
+I'm going to do this in a separate file. (I'm guessing he'll suggest that too, but I don't care, I'm doing it.)
+
+-  Copy `Checkout.tsx` to `CheckoutClass.tsx`
+-  Change declaration to class instead of function
+-  Extend `React.Component`
+   -  From what I've seen in quick glances, the returned JSX will become a `render` method
+
+### Problem: Can't use hooks in classes (patterns also work for sharing logic)
+
+-  Convert the class to a function
+-  Use the hook in a parent and pass data/functions in props
+-  Wrap the hook
+   -  Write a function wrapper
+   -  Render prop
+   -  "Function as a child" (explained in a future section)
+
+In this case, pass from the parent
+
+-  `useCart` in the parent (`App`) and pass the dispatcher function in props
+-  In `Checkout` use `this.props.<dispatcher function>`
+
+### Problem: Need to declare state
+
+-  Option 1: constructor
+   -  Write a constructor that assigns `this.state` as an object containing the four pieces of state
+   -  No set methods, just the data and the default value
+-  Option 2: class field
+   -  Declare `state` at the top of the class; no constructor, just the object and defaults
+
+```tsx
+// constructor example
+export class Checkout extends React.Component {
+
+constructor(props: PropsWithChildren) {
+   super(props);
+   this.state = {
+      address: emptyAddress,
+      checkoutStatus: CHECKOUT_STATUS.NOT_SUBMITTED,
+      saveError: null as unknown as Error,
+      touchedFields: emptyTouchedFields
+   }
+}
+```
+
+```tsx
+// class field example
+export class Checkout extends React.Component {
+	state = {
+		address: emptyAddress,
+		checkoutStatus: CHECKOUT_STATUS.NOT_SUBMITTED,
+		saveError: null as unknown as Error,
+		touchedFields: emptyTouchedFields
+	};
+```
+
+### Problem: Derived state isn't happy
+
+-  I wonder if we just use a `this.state.` prefix
+-  Nope, needs to be in a method
+-  `private isFormValid()`
+   -  Does need to use `this.state.` (guessed that much right)
+   -  Also move `getErrors()` up and make it a private method
+-  Make rest of the methods private
+-  Wrap the rest of the code in `render()` method
+
+He moves on to the next video here, but I'm going to put `this.` in front of all the class method calls and `this.state.` in front of state references to remove the errors.
+
+**COMMIT: 9.0.2 - REFACTOR: (code not working) change Checkout to a class, configure state, make functions methods, add this prefixes as needed**

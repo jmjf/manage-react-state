@@ -8,8 +8,11 @@ import { Cart } from 'components/Cart';
 import { Checkout } from 'components/Checkout';
 
 import './App.css';
+import { useCartContext } from 'hooks/useCartContext';
 
 export default function App() {
+	const { dispatchCartItemsAction } = useCartContext();
+
 	return (
 		<>
 			<div className="content">
@@ -34,7 +37,11 @@ export default function App() {
 						/>
 						<Route
 							path="/checkout"
-							element={<Checkout />}
+							element={
+								<Checkout
+									dispatchCartItemsAction={dispatchCartItemsAction}
+								/>
+							}
 						/>
 					</Routes>
 				</main>
