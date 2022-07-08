@@ -5,7 +5,7 @@ import Header from 'components/Header';
 import { Products } from 'components/Products';
 import { ProductDetail } from 'components/ProductDetail';
 import { Cart } from 'components/Cart';
-import { Checkout } from 'components/Checkout';
+import { Checkout } from 'components/CheckoutClass';
 
 import './App.css';
 import { useCartContext } from 'hooks/useCartContext';

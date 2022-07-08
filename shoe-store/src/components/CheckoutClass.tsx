@@ -1,4 +1,4 @@
-import React, { BaseSyntheticEvent } from 'react';
+import React, { BaseSyntheticEvent, Dispatch } from 'react';
 
 import { saveShippingAddress } from 'services/shippingService';
 
@@ -9,7 +9,8 @@ import {
 	ICountryState,
 	countryStates,
 } from 'models/Location';
-import { useCartContext } from 'hooks/useCartContext';
+
+import { CartReducerAction } from 'reducers/cartReducer';
 
 // I want to filter the list of states by country
 
@@ -31,7 +32,11 @@ interface ICheckoutState {
 	touchedFields: { [k: string]: boolean };
 }
 
-export class Checkout extends React.Component {
+interface ICheckoutProps {
+	dispatchCartItemsAction: Dispatch<CartReducerAction>;
+}
+
+export class Checkout extends React.Component<ICheckoutProps, ICheckoutState> {
 	state = {
 		address: emptyAddress,
 		checkoutStatus: CHECKOUT_STATUS.NOT_SUBMITTED,
@@ -46,7 +51,7 @@ export class Checkout extends React.Component {
 		);
 	}
 
-	private getErrors(address: IAddress): IAddress {
+	private getErrors = (address: IAddress): IAddress => {
 		return {
 			shipToName:
 				address.shipToName.length > 0 ? '' : 'Ship to name is required',
@@ -69,29 +74,33 @@ export class Checkout extends React.Component {
 				? ''
 				: 'Country code is required',
 		};
-	}
+	};
 
-	private handleChange(ev: BaseSyntheticEvent) {
+	private handleChange = (ev: BaseSyntheticEvent) => {
 		ev.preventDefault();
 
-		this.setState((oldState: ICheckoutState) => {
+		this.setState((oldState) => {
 			return {
-				address: { ...oldState.address },
-				stateCode:
-					ev.target.id === 'countryCode' ? '' : oldState.address.stateCode,
-				[ev.target.id]: ev.target.value,
-			};
+				address: {
+					...oldState.address,
+					stateCode:
+						ev.target.id === 'countryCode'
+							? ''
+							: oldState.address.stateCode,
+					[ev.target.id]: ev.target.value,
+				},
+			} as unknown as ICheckoutState;
 		});
-	}
-	private handleBlur(ev: BaseSyntheticEvent) {
-		this.setState((oldState: ICheckoutState) => {
+	};
+	private handleBlur = (ev: BaseSyntheticEvent) => {
+		this.setState((oldState) => {
 			return {
 				touchedFields: { ...oldState.touchedFields },
 				[ev.target.id]: true,
-			};
+			} as unknown as ICheckoutState;
 		});
-	}
-	private async handleSubmit(ev: BaseSyntheticEvent) {
+	};
+	private handleSubmit = async (ev: BaseSyntheticEvent) => {
 		ev.preventDefault();
 		if (!this.isFormValid()) {
 			this.setState({ checkoutStatus: CHECKOUT_STATUS.FAILED_SUBMIT });
@@ -109,25 +118,25 @@ export class Checkout extends React.Component {
 					checkoutStatus: CHECKOUT_STATUS.SUCCESSFUL_SUBMIT,
 				});
 
-				this.dispatchCartItemsAction({ type: 'EmptyCart' });
+				this.props.dispatchCartItemsAction({ type: 'EmptyCart' });
 			} else {
 				this.setState({ checkoutStatus: CHECKOUT_STATUS.FAILED_SUBMIT });
 			}
 		} catch (err) {
 			console.log('ERROR: saveError', err);
-			this.setState({ saveError: err });
+			this.setState({ saveError: err as Error });
 			// will throw an error, so don't need to set status
 		}
-	}
+	};
 
-	private getValidStatesForCountry(): ICountryState[] {
+	private getValidStatesForCountry = (): ICountryState[] => {
 		return (
 			countryStates.filter(
 				(countryState) =>
 					countryState.countryCode === this.state.address.countryCode
 			) ?? ([] as unknown as ICountryState[])
 		);
-	}
+	};
 
 	render() {
 		const { saveError, checkoutStatus, address, touchedFields } = this.state;

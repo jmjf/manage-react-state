@@ -128,8 +128,46 @@ Also, I had to declare an interface/type for the state object because `this.setS
 
 **COMMIT: 9.0.3 - REFACTOR: (code not working) change state setting in methods to align with class component model**
 
-## Problem: render() needs data from state
+### Problem: render() needs data from state
 
 Declare destructured values and computed values at the top of `render()`. Which means two lines of code.
 
 **COMMIT: 9.0.4 - REFACTOR: (code not working) change references to state in render() to use local values (destructure, derive)**
+
+### Problem: The dispatcher function is unknown
+
+He doesn't seem to have this issue. Maybe I missed him fixing it. But I have an error on the dispatcher function called in `handleSubmit()`. In the function component version, we get the dispatcher with the `useCartContext` hook. In the class version we get it from `props`, and TS doesn't know the function exists on `props`.
+
+Here's the solution ([Ref1](https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/class_components/), [Ref2](https://www.jetbrains.com/webstorm/guide/tutorials/react_typescript_tdd/class_props/)). Pass the props shape as the first generic. I tried passing state as suggested in Ref1, but got errors in `setState()` calls. Will trace that out later maybe.
+
+```tsx
+interface ICheckoutProps {
+	dispatchCartItemsAction: Dispatch<CartReducerAction>;
+}
+
+export class Checkout extends React.Component<ICheckoutProps>
+```
+
+So, now I have no eslint/TS errors, let's see it if works.
+
+-  In `App` import from `CheckoutClass.tsx` instead of `Checkout.tsx` (which solved an issue I had with the dispatcher function prop that isn't on the function version)
+-  Trying to enter a name fails
+   -  I'm getting an error on my event handler, "Uncaught TypeError: Cannot read properties of undefined (reading 'setState')"
+   -  Added `console.log`s in the state changer, but this is failing before it gets to them
+   -  Maybe I need to pass the state type to the `React.Component<>` too
+   -  I resolved the issue with passing the state type (pass the type, ensure the return from `setState( () => {} )` is cast as the type)
+   -  Google results suggest the problem is a binding issue (binding to `this`)
+   -  Solution: use arrow functions or use `.bind(this)` in a constructor; arrow functions are easier
+      -  Arrow functions inherit `this` from their enclosing scope
+   -  Error resolved, but data still not changing; `console.log` shows input data is what I expect
+   -  I think I had my closing brace on the address object in the wrong place in `handleChange`
+-  Works now
+
+**Rule of thumb:** When working with class components, prefer to declare methods with arrow functions to avoid binding issues. This rule is most important for functions passed in `{}` in JSX, but may be wisest to follow it generally so you don't have to remember which is which.
+
+**COMMIT: 9.0.5 - REFACTOR: pass props in generics so the component knows the dispatcher function exists; fix binding issues event handlers**
+
+Oh! Lol. He has the same binding issue. "Let's fix that in the next video."
+
+-  Same answer
+-  Well, I found it myself and don't think I'll forget it soon
