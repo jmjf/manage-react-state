@@ -109,3 +109,21 @@ export class Checkout extends React.Component {
 He moves on to the next video here, but I'm going to put `this.` in front of all the class method calls and `this.state.` in front of state references to remove the errors.
 
 **COMMIT: 9.0.2 - REFACTOR: (code not working) change Checkout to a class, configure state, make functions methods, add this prefixes as needed**
+
+### Problem: Set state calls when we have no setters
+
+I suspect we just assign values to `this.state` parts.
+
+-  Ah, `this.setState()`, so React apparently assigns class components `state` member a setter by default
+-  And it contains all the component state (less granular)
+-  And it does a shallow merge, so you need to provide only changed data, which might solve the granularity issue
+-  If we need the old state (e.g., for address), need to give it a function; if we don't, just return what to change
+
+That was a learning experience. Several things didn't behave like I expected, but I see what's going on now.
+
+-  `this.setState()` exists and is required to set state
+-  Shallow merge means pass only what's needed (function that returns part to overwrite if need old state, part to overwrite if not)
+
+Also, I had to declare an interface/type for the state object because `this.setState((oldState) => {})` requires a type on `oldState` or it doesn't know what members are available.
+
+**COMMIT: 9.0.3 - REFACTOR: (code not working) change state setting in methods to align with class component model**

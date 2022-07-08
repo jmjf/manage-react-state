@@ -8,6 +8,7 @@ import {
 	countries,
 	ICountryState,
 	countryStates,
+	IAddressTouched,
 } from 'models/Location';
 import { useCartContext } from 'hooks/useCartContext';
 
@@ -24,13 +25,20 @@ const emptyTouchedFields = Object.fromEntries(
 	Object.keys(emptyAddress).map((key) => [key, false])
 );
 
+interface ICheckoutState {
+	address: IAddress;
+	checkoutStatus: string;
+	saveError: Error;
+	touchedFields: { [k: string]: boolean };
+}
+
 export class Checkout extends React.Component {
 	state = {
 		address: emptyAddress,
 		checkoutStatus: CHECKOUT_STATUS.NOT_SUBMITTED,
 		saveError: null as unknown as Error,
 		touchedFields: emptyTouchedFields,
-	};
+	} as ICheckoutState;
 
 	// derived state
 	private isFormValid() {
@@ -67,39 +75,48 @@ export class Checkout extends React.Component {
 	private handleChange(ev: BaseSyntheticEvent) {
 		ev.preventDefault();
 
-		setAddress((oldAddress) => {
-			const newAddress = { ...oldAddress, [ev.target.id]: ev.target.value };
-			if (ev.target.id === 'countryCode') {
-				newAddress.stateCode = '';
-			}
-			return newAddress as IAddress;
+		this.setState((oldState: ICheckoutState) => {
+			return {
+				address: { ...oldState.address },
+				stateCode:
+					ev.target.id === 'countryCode' ? '' : oldState.address.stateCode,
+				[ev.target.id]: ev.target.value,
+			};
 		});
 	}
 	private handleBlur(ev: BaseSyntheticEvent) {
-		setTouchedFields((oldTouchedFields) => {
-			return { ...oldTouchedFields, [ev.target.id]: true };
+		this.setState((oldState: ICheckoutState) => {
+			return {
+				touchedFields: { ...oldState.touchedFields },
+				[ev.target.id]: true,
+			};
 		});
-		//TODO
 	}
 	private async handleSubmit(ev: BaseSyntheticEvent) {
 		ev.preventDefault();
-		setCheckoutStatus(CHECKOUT_STATUS.IS_SUBMITTING);
-		if (!isFormValid) {
-			setCheckoutStatus(CHECKOUT_STATUS.FAILED_SUBMIT);
+		if (!this.isFormValid()) {
+			this.setState({ checkoutStatus: CHECKOUT_STATUS.FAILED_SUBMIT });
 			return;
 		}
+
+		this.setState((oldState: ICheckoutState) => {
+			return { checkoutStatus: CHECKOUT_STATUS.IS_SUBMITTING };
+		});
 		try {
-			const saveResult = await saveShippingAddress(address);
+			const saveResult = await saveShippingAddress(this.state.address);
 
 			if (saveResult.ok) {
-				setCheckoutStatus(CHECKOUT_STATUS.SUCCESSFUL_SUBMIT);
+				this.setState({
+					checkoutStatus: CHECKOUT_STATUS.SUCCESSFUL_SUBMIT,
+				});
+
 				this.props.dispatchCartItemsAction({ type: 'EmptyCart' });
 			} else {
-				setCheckoutStatus(CHECKOUT_STATUS.FAILED_SUBMIT);
+				this.setState({ checkoutStatus: CHECKOUT_STATUS.FAILED_SUBMIT });
 			}
 		} catch (err) {
 			console.log('ERROR: saveError', err);
-			setSaveError(err as Error);
+			this.setState({ saveError: err });
 			// will throw an error, so don't need to set status
 		}
 	}
@@ -107,13 +124,14 @@ export class Checkout extends React.Component {
 	private getValidStatesForCountry(): ICountryState[] {
 		return (
 			countryStates.filter(
-				(countryState) => countryState.countryCode === address.countryCode
+				(countryState) =>
+					countryState.countryCode === this.state.address.countryCode
 			) ?? ([] as unknown as ICountryState[])
 		);
 	}
 
 	render() {
-		if (this.state.saveError) throw saveError;
+		if (this.state.saveError) throw this.state.saveError;
 		if (this.state.checkoutStatus === CHECKOUT_STATUS.SUCCESSFUL_SUBMIT) {
 			return <h1>Order submitted</h1>;
 		}
