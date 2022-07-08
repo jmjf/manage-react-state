@@ -1,4 +1,4 @@
-import React, { BaseSyntheticEvent, PropsWithChildren, useState } from 'react';
+import React, { BaseSyntheticEvent } from 'react';
 
 import { saveShippingAddress } from 'services/shippingService';
 
@@ -8,7 +8,6 @@ import {
 	countries,
 	ICountryState,
 	countryStates,
-	IAddressTouched,
 } from 'models/Location';
 import { useCartContext } from 'hooks/useCartContext';
 
@@ -110,7 +109,7 @@ export class Checkout extends React.Component {
 					checkoutStatus: CHECKOUT_STATUS.SUCCESSFUL_SUBMIT,
 				});
 
-				this.props.dispatchCartItemsAction({ type: 'EmptyCart' });
+				this.dispatchCartItemsAction({ type: 'EmptyCart' });
 			} else {
 				this.setState({ checkoutStatus: CHECKOUT_STATUS.FAILED_SUBMIT });
 			}
@@ -131,16 +130,19 @@ export class Checkout extends React.Component {
 	}
 
 	render() {
-		if (this.state.saveError) throw this.state.saveError;
-		if (this.state.checkoutStatus === CHECKOUT_STATUS.SUCCESSFUL_SUBMIT) {
+		const { saveError, checkoutStatus, address, touchedFields } = this.state;
+		const errors = this.getErrors(address);
+
+		if (saveError) throw saveError;
+		if (checkoutStatus === CHECKOUT_STATUS.SUCCESSFUL_SUBMIT) {
 			return <h1>Order submitted</h1>;
 		}
 
 		return (
 			<>
 				<h1>Shipping Information</h1>
-				{!this.isFormValid &&
-					this.state.checkoutStatus === CHECKOUT_STATUS.FAILED_SUBMIT && (
+				{!this.isFormValid() &&
+					checkoutStatus === CHECKOUT_STATUS.FAILED_SUBMIT && (
 						<div role="alert">
 							<p>Please fix these errors:</p>
 							<ul>
@@ -159,14 +161,13 @@ export class Checkout extends React.Component {
 						<input
 							id="shipToName"
 							type="text"
-							value={this.state.address.shipToName}
+							value={address.shipToName}
 							onBlur={this.handleBlur}
 							onChange={this.handleChange}
 						/>
 						<p role="alert">
-							{(this.state.touchedFields.shipToName ||
-								this.state.checkoutStatus ===
-									CHECKOUT_STATUS.FAILED_SUBMIT) &&
+							{(touchedFields.shipToName ||
+								checkoutStatus === CHECKOUT_STATUS.FAILED_SUBMIT) &&
 								errors.shipToName}
 						</p>
 					</div>
@@ -176,14 +177,13 @@ export class Checkout extends React.Component {
 						<input
 							id="addressLine1Text"
 							type="text"
-							value={this.state.address.addressLine1Text}
+							value={address.addressLine1Text}
 							onBlur={this.handleBlur}
 							onChange={this.handleChange}
 						/>
 						<p role="alert">
-							{(this.state.touchedFields.addressLine1Text ||
-								this.state.checkoutStatus ===
-									CHECKOUT_STATUS.FAILED_SUBMIT) &&
+							{(touchedFields.addressLine1Text ||
+								checkoutStatus === CHECKOUT_STATUS.FAILED_SUBMIT) &&
 								errors.addressLine1Text}
 						</p>
 					</div>
@@ -193,7 +193,7 @@ export class Checkout extends React.Component {
 						<input
 							id="addressLine2Text"
 							type="text"
-							value={this.state.address.addressLine2Text}
+							value={address.addressLine2Text}
 							onBlur={this.handleBlur}
 							onChange={this.handleChange}
 						/>
@@ -204,14 +204,13 @@ export class Checkout extends React.Component {
 						<input
 							id="cityName"
 							type="text"
-							value={this.state.address.cityName}
+							value={address.cityName}
 							onBlur={this.handleBlur}
 							onChange={this.handleChange}
 						/>
 						<p role="alert">
-							{(this.state.touchedFields.cityName ||
-								this.state.checkoutStatus ===
-									CHECKOUT_STATUS.FAILED_SUBMIT) &&
+							{(touchedFields.cityName ||
+								checkoutStatus === CHECKOUT_STATUS.FAILED_SUBMIT) &&
 								errors.cityName}
 						</p>
 					</div>
@@ -221,14 +220,13 @@ export class Checkout extends React.Component {
 						<input
 							id="postalCode"
 							type="text"
-							value={this.state.address.postalCode}
+							value={address.postalCode}
 							onBlur={this.handleBlur}
 							onChange={this.handleChange}
 						/>
 						<p role="alert">
-							{(this.state.touchedFields.postalCode ||
-								this.state.checkoutStatus ===
-									CHECKOUT_STATUS.FAILED_SUBMIT) &&
+							{(touchedFields.postalCode ||
+								checkoutStatus === CHECKOUT_STATUS.FAILED_SUBMIT) &&
 								errors.postalCode}
 						</p>
 					</div>
@@ -237,7 +235,7 @@ export class Checkout extends React.Component {
 						<br />
 						<select
 							id="countryCode"
-							value={this.state.address.countryCode}
+							value={address.countryCode}
 							onBlur={this.handleBlur}
 							onChange={this.handleChange}
 						>
@@ -257,9 +255,8 @@ export class Checkout extends React.Component {
 							))}
 						</select>
 						<p role="alert">
-							{(this.state.touchedFields.countryCode ||
-								this.state.checkoutStatus ===
-									CHECKOUT_STATUS.FAILED_SUBMIT) &&
+							{(touchedFields.countryCode ||
+								checkoutStatus === CHECKOUT_STATUS.FAILED_SUBMIT) &&
 								errors.countryCode}
 						</p>
 					</div>
@@ -268,10 +265,10 @@ export class Checkout extends React.Component {
 						<br />
 						<select
 							id="stateCode"
-							value={this.state.address.stateCode}
+							value={address.stateCode}
 							onBlur={this.handleBlur}
 							onChange={this.handleChange}
-							disabled={this.state.address.countryCode === ''}
+							disabled={address.countryCode === ''}
 						>
 							<option
 								key=""
@@ -289,9 +286,8 @@ export class Checkout extends React.Component {
 							))}
 						</select>
 						<p role="alert">
-							{(this.state.touchedFields.stateCode ||
-								this.state.checkoutStatus ===
-									CHECKOUT_STATUS.FAILED_SUBMIT) &&
+							{(touchedFields.stateCode ||
+								checkoutStatus === CHECKOUT_STATUS.FAILED_SUBMIT) &&
 								errors.stateCode}
 						</p>
 					</div>
@@ -300,10 +296,7 @@ export class Checkout extends React.Component {
 							type="submit"
 							className="btn btn-primary"
 							value="Save shipping info"
-							disabled={
-								this.state.checkoutStatus ===
-								CHECKOUT_STATUS.IS_SUBMITTING
-							}
+							disabled={checkoutStatus === CHECKOUT_STATUS.IS_SUBMITTING}
 						/>
 					</div>
 				</form>

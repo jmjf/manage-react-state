@@ -127,3 +127,9 @@ That was a learning experience. Several things didn't behave like I expected, bu
 Also, I had to declare an interface/type for the state object because `this.setState((oldState) => {})` requires a type on `oldState` or it doesn't know what members are available.
 
 **COMMIT: 9.0.3 - REFACTOR: (code not working) change state setting in methods to align with class component model**
+
+## Problem: render() needs data from state
+
+Declare destructured values and computed values at the top of `render()`. Which means two lines of code.
+
+**COMMIT: 9.0.4 - REFACTOR: (code not working) change references to state in render() to use local values (destructure, derive)**
