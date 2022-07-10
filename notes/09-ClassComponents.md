@@ -196,3 +196,27 @@ The main challenge here is getting everything arranged right. The basic structur
 If the class component is complex, I guess this makes sense as a way to use hooks with it. Otherwise, it seems like converting the class component to a function component wouldn't be much work. (It is a bit of work, but it seems like the reasoning complexity the wrapper adds for maintenance would outweigh the effort.)
 
 **COMMIT: 9.0.6 - REFACTOR: convert ProductDetail to a class and use a wrapper function to use hooks with it**
+
+## Create a render prop for useFetch to make it reusable for class components
+
+Sometimes, we might need the same hook in different class components. Render props are reusable.
+
+-  New component accepts prop called `render`
+-  Component passes data and functions to `render` function
+-  Call the new component in the class component with most of the `render` function pulled into the prop (anything that needs data from the new component)
+
+```tsx
+interface IFetchProps {
+	url: string;
+	render: (data: any, isLoading: boolean, error: any) => React.Component;
+}
+
+export function Fetch({ url, render }: IFetchProps) {
+	const { data, isLoading, error } = useFetch(url);
+	return render(data, isLoading, error);
+}
+```
+
+Using this in the class gets hairy. Had to pull almost all the code into the `render` property. Looks like a lot of cognitive friction that ensures maintenance is harder. Introduces a lot of room for error getting it right. I have a feeling this does bad things to testability too. I'd need a very good reason to do this instead of convert to a function component if I wanted to use a hook.
+
+**COMMIT: 9.0.7 - REFACTOR: change class-based ProductDetail to use a render prop to pass data from the useFetch hook**

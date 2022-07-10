@@ -51,3 +51,13 @@ export function useFetch<DataType>(url: string): IUseFetchResult<DataType> {
 
 	return { data, error, isLoading };
 }
+
+interface IFetchProps {
+	url: string;
+	render: any;
+}
+
+export function Fetch({ url, render }: IFetchProps) {
+	const { data, isLoading, error } = useFetch(url);
+	return render(data, isLoading, error);
+}
