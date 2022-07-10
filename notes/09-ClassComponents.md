@@ -171,3 +171,28 @@ Oh! Lol. He has the same binding issue. "Let's fix that in the next video."
 
 -  Same answer
 -  Well, I found it myself and don't think I'll forget it soon
+
+## Convert ProductDetail to a class; sharing logic and consuming hooks with a custom wrapper
+
+Create a custom wrapper for hooks in the class component's files and export.
+
+-  Do basic class component conversion
+-  Create a function component that acts as the wrapper
+-  Move hooks into the wrapper
+-  Pass hook results to the class component as props
+-  Wrapper returns the class component with props passed
+
+So, let's use the wrapper in `App`. The product detail page seems to work as expected.
+
+The main challenge here is getting everything arranged right. The basic structure of the file is:
+
+-  Imports
+-  Declare interfaces for props and state
+-  Declare class component
+-  Export wrapper function component
+   -  Hooks
+   -  `return <class-component prop1={prop1} prop2={prop2} ... propn={propn} />`
+
+If the class component is complex, I guess this makes sense as a way to use hooks with it. Otherwise, it seems like converting the class component to a function component wouldn't be much work. (It is a bit of work, but it seems like the reasoning complexity the wrapper adds for maintenance would outweigh the effort.)
+
+**COMMIT: 9.0.6 - REFACTOR: convert ProductDetail to a class and use a wrapper function to use hooks with it**
