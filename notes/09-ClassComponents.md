@@ -276,3 +276,9 @@ The solution I found was to destructure `this.context as React.ContextType<typeo
 Limitation: This approach only lets you consume one context. (Many context option next.)
 
 **COMMIT: 9.0.9 - REFACTOR: use context directly in the class with static contextType**
+
+Because `node_modules` may be out of sync, I'm going to delete it and `npm install` in both the main repo and shoe-store directories to ensure it's properly aligned.
+
+Confirmed code still works.
+
+**COMMIT: 9.0.10 - CHORE: ensure node_modules matches package.json**
