@@ -282,3 +282,27 @@ Because `node_modules` may be out of sync, I'm going to delete it and `npm insta
 Confirmed code still works.
 
 **COMMIT: 9.0.10 - CHORE: ensure node_modules matches package.json**
+
+## Using many context types with the context consumer
+
+-  Remove `static contextType...`
+-  Wrap the JSX in the `render` return with `<CartContext.Consumer>`
+-  The consumer passes a prop like a render prop to it's children, so add an arrow function inside the consumer that destructures the dispatcher function from its parameters and uses it
+-  He uses a `return`, but it isn't required if you don't wrap the contents of the arrow function in `{}`
+
+Not that hard to code, but hard to explain. See the diff between this and the previous commit.
+
+To consume more than one contexts, nest them in `render` OR create a component that composes all the contexts so you can avoid nesting.
+
+-  But I'm back to, this is a lot of work and cognitive friction, so avoid if possible
+
+Code is working as expected.
+
+**COMMIT: 9.0.11 - REFACTOR: wrap the context consumer around the JSX in the render function**
+
+Key things to remember about classes:
+
+-  Avoid a constructor by declaring state as an attribute of the class
+-  Arrow functions inherit `this` from their parent, so prefer them when declaring class methods
+-  Using hooks and context in classes is harder than using hooks and contexts in function components
+   -  Approach with caution; avoid if possible
