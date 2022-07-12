@@ -54,10 +54,10 @@ export function useFetch<DataType>(url: string): IUseFetchResult<DataType> {
 
 interface IFetchProps {
 	url: string;
-	render: any;
+	children: any;
 }
 
-export function Fetch({ url, render }: IFetchProps) {
+export function Fetch({ url, children }: IFetchProps) {
 	const { data, isLoading, error } = useFetch(url);
-	return render(data, isLoading, error);
+	return children(data, isLoading, error);
 }

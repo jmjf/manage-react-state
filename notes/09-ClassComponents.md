@@ -172,7 +172,7 @@ Oh! Lol. He has the same binding issue. "Let's fix that in the next video."
 -  Same answer
 -  Well, I found it myself and don't think I'll forget it soon
 
-## Convert ProductDetail to a class; sharing logic and consuming hooks with a custom wrapper
+## Custom wrapper pattern: convert ProductDetail to a class; sharing logic and consuming hooks with a custom wrapper
 
 Create a custom wrapper for hooks in the class component's files and export.
 
@@ -197,7 +197,7 @@ If the class component is complex, I guess this makes sense as a way to use hook
 
 **COMMIT: 9.0.6 - REFACTOR: convert ProductDetail to a class and use a wrapper function to use hooks with it**
 
-## Create a render prop for useFetch to make it reusable for class components
+## Render prop pattern: create a render prop for useFetch to make it reusable for class components
 
 Sometimes, we might need the same hook in different class components. Render props are reusable.
 
@@ -220,3 +220,19 @@ export function Fetch({ url, render }: IFetchProps) {
 Using this in the class gets hairy. Had to pull almost all the code into the `render` property. Looks like a lot of cognitive friction that ensures maintenance is harder. Introduces a lot of room for error getting it right. I have a feeling this does bad things to testability too. I'd need a very good reason to do this instead of convert to a function component if I wanted to use a hook.
 
 **COMMIT: 9.0.7 - REFACTOR: change class-based ProductDetail to use a render prop to pass data from the useFetch hook**
+
+## Function as child pattern: use a children function instead of a render function
+
+Instead of declaring a prop for `render`, use `children`.
+
+-  I think I see where this is going, roughly
+
+-  Declare `children` as a prop on `Fetch` and use `children` instead of `render`
+-  In `ProductDetail`, wrap the `<Fetch>` tag around the `render` prop
+-  Remove `render=` leaving the function wrapped around the JSX
+
+This pattern gives marginally fewer bytes of code.
+
+Basic test shows it works.
+
+**COMMIT: 9.0.8 - REFACTOR: use function as a child pattern to use the Fetch hook in ProductDetail**

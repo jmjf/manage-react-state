@@ -32,13 +32,8 @@ class ProductDetail extends React.Component<
 		const { id, navigate, dispatchCartItemsAction } = this.props;
 
 		return (
-			<Fetch
-				url={`products/${id}`}
-				render={(
-					data: IProduct | IProduct[],
-					isLoading: boolean,
-					error: any
-				) => {
+			<Fetch url={`products/${id}`}>
+				{(data: IProduct | IProduct[], isLoading: boolean, error: any) => {
 					if (isLoading) return <Spinner />;
 					if (!data) return <PageNotFound />;
 					if (error) throw error;
@@ -96,7 +91,7 @@ class ProductDetail extends React.Component<
 						</div>
 					);
 				}}
-			/>
+			</Fetch>
 		);
 	}
 }
