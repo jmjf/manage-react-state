@@ -71,11 +71,11 @@ const initialCartItems = ((): ICartItem[] => {
 	}
 })();
 
-interface ICartContextState {
+export interface ICartContextState {
 	cartItems: ICartItem[];
 	dispatchCartItemsAction: Dispatch<CartReducerAction>;
 }
 
-const CartContext = createContext<ICartContextState>(
+export const CartContext = createContext<ICartContextState>(
 	{} as unknown as ICartContextState
 );

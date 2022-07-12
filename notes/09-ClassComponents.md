@@ -236,3 +236,43 @@ This pattern gives marginally fewer bytes of code.
 Basic test shows it works.
 
 **COMMIT: 9.0.8 - REFACTOR: use function as a child pattern to use the Fetch hook in ProductDetail**
+
+## Using contextType to consume context directly
+
+Need to import context (export it)
+
+-  In `useCartContext.tsx`, add `export` to `CartContext` declaration
+-  In `ProductDetailClass.tsx`
+   -  Replace `import ... useCartContext` with `import ... CartContext`
+   -  Remove destructures and prop passes of `dispatchCartItemsAction`
+   -  Option 1: static method: Above `render` add `static contextType = CartContext;` -> `this.context` is now `CartContext`
+      -  TS -> `contextType: React.Context<ICartContextState>`
+      -  Need to export `ICartContextState` from `useCartContext.tsx`
+      -  Use `this.context.dispatchCartItemsAction`
+   -  TS/VSCode is complaining and says it wants `declare context: React.ContextType<typeof CartContext>;` after the `static...`
+      -  Message: If using the new style context, re-declare this in your class to be the React.ContextType of your static contextType. Should be used with type annotation or static contextType.
+      -  Casting the right side of the `static..` doesn't resolve it
+      -  TS pre-3.7 requires `context!` instead of `declare context`
+
+I'm getting an error from Babel that implies I need to configure the order in which plugins run. I can't find where that's happening, though.
+
+```
+SyntaxError: /home/jmjf/dev/learn-react/manage-react-state/shoe-store/src/components/ProductDetailClass.tsx: TypeScript 'declare' fields must first be transformed by @babel/plugin-transform-typescript.
+If you have already enabled that plugin (or '@babel/preset-typescript'), make sure that it runs before any plugin related to additional class features:
+ - @babel/plugin-proposal-class-properties
+ - @babel/plugin-proposal-private-methods
+ - @babel/plugin-proposal-decorators
+  29 |  };
+  30 |
+> 31 |  declare context: React.ContextType<typeof CartContext>;
+     |  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  32 |  static contextType = CartContext;
+```
+
+I tried installing the Babel plugins, but am not sure how to get them to work.
+
+The solution I found was to destructure `this.context as React.ContextType<typeof CartContext>` in the `render` function, then called the destructured function (ll. 34-36).
+
+Limitation: This approach only lets you consume one context. (Many context option next.)
+
+**COMMIT: 9.0.9 - REFACTOR: use context directly in the class with static contextType**

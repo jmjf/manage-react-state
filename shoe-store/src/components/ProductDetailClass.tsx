@@ -1,14 +1,13 @@
-import React, { Dispatch } from 'react';
+import React from 'react';
 
-import { IUseFetchResult, Fetch } from 'hooks/useFetch';
+import { Fetch } from 'hooks/useFetch';
 import { NavigateFunction, useNavigate, useParams } from 'react-router';
 
 import { PageNotFound } from './PageNotFound';
 import Spinner from './Spinner';
 
 import { IProduct } from 'models/Product';
-import { useCartContext } from 'hooks/useCartContext';
-import { CartReducerAction } from 'reducers/cartReducer';
+import { CartContext } from 'hooks/useCartContext';
 
 interface IProductDetailState {
 	selectedSku: string;
@@ -16,7 +15,7 @@ interface IProductDetailState {
 
 interface IProductDetailProps {
 	id: string;
-	dispatchCartItemsAction: Dispatch<CartReducerAction>;
+	// dispatchCartItemsAction: Dispatch<CartReducerAction>;
 	navigate: NavigateFunction;
 }
 
@@ -28,8 +27,13 @@ class ProductDetail extends React.Component<
 		selectedSku: '',
 	};
 
+	static contextType = CartContext;
+
 	render() {
-		const { id, navigate, dispatchCartItemsAction } = this.props;
+		const { id, navigate } = this.props;
+		const { dispatchCartItemsAction } = this.context as React.ContextType<
+			typeof CartContext
+		>;
 
 		return (
 			<Fetch url={`products/${id}`}>
@@ -97,14 +101,12 @@ class ProductDetail extends React.Component<
 }
 
 export function ProductDetailWrapper() {
-	const { dispatchCartItemsAction } = useCartContext();
 	const { id } = useParams();
 
 	return (
 		<ProductDetail
 			id={id || ''}
 			navigate={useNavigate()}
-			dispatchCartItemsAction={dispatchCartItemsAction}
 		/>
 	);
 }
